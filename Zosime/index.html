@@ -1,1 +1,145 @@
-hello Zosime
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Reading Practice</title>
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; line-height: 2.2; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        .container { background-color: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 5px; }
+        ruby { ruby-align: center; font-size: 1.3rem; }
+        rt { font-size: 0.85rem; color: #666; font-weight: normal; }
+        .reading-section { margin-bottom: 40px; padding: 20px; border-bottom: 2px solid #eee; }
+        .vocabulary { color: #e67e22; font-weight: bold; border-bottom: 2px dashed #e67e22; cursor: help; position: relative; }
+        .vocabulary:hover::after { content: attr(data-definition); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background-color: #34495e; color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; white-space: nowrap; z-index: 10; font-weight: normal; }
+        .question-block { margin-bottom: 30px; padding: 15px; border-radius: 8px; background: #fafafa; }
+        .btn-submit { background-color: #27ae60; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-reset { background-color: #95a5a6; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; margin-left: 10px; }
+        .result-icon { font-size: 1.5rem; margin-left: 15px; vertical-align: middle; }
+        .practice-box { background-color: #e8f4fd; padding: 20px; border-left: 5px solid #3498db; margin-top: 30px; }
+        p { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><ruby>冬<rt>dōng</rt></ruby><ruby>天<rt>tiān</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>小<rt>xiǎo</rt></ruby><ruby>故<rt>gù</rt></ruby><ruby>事<rt>shi</rt></ruby></h1>
+    <p style="text-align:center; color:gray; margin-top:0;">(A Little Winter Story)</p>
+
+    <div class="reading-section">
+        <p>
+            <ruby>冬<rt>dōng</rt></ruby><ruby>天<rt>tiān</rt></ruby><ruby>到<rt>dào</rt></ruby><ruby>了<rt>le</rt></ruby>，<ruby>天<rt>tiān</rt></ruby><ruby>气<rt>qì</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>冷<rt>lěng</rt></ruby>。
+            <span class="vocabulary" data-definition="[v-obj.] roll a snowball">
+                <ruby>滚<rt>gǔn</rt></ruby><ruby>雪<rt>xuě</rt></ruby><ruby>球<rt>qiú</rt></ruby>
+            </span>
+            <ruby>的<rt>de</rt></ruby><ruby>人<rt>rén</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>多<rt>duō</rt></ruby>。
+        </p>
+        <p>
+            <ruby>大<rt>dà</rt></ruby><ruby>卫<rt>wèi</rt></ruby><ruby>和<rt>hé</rt></ruby><ruby>朋<rt>péng</rt></ruby><ruby>友<rt>you</rt></ruby><ruby>们<rt>men</rt></ruby>
+            <span class="vocabulary" data-definition="[prep. phrase] put... at/on...">
+                <ruby>把<rt>bǎ</rt></ruby><ruby>小<rt>xiǎo</rt></ruby><ruby>雪<rt>xuě</rt></ruby><ruby>球<rt>qiú</rt></ruby><ruby>放<rt>fàng</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>雪<rt>xuě</rt></ruby><ruby>球<rt>qiú</rt></ruby><ruby>上<rt>shang</rt></ruby><ruby>面<rt>mian</rt></ruby>
+            </span>。
+            <ruby>他<rt>tā</rt></ruby><ruby>们<rt>men</rt></ruby><ruby>给<rt>gěi</rt></ruby><ruby>雪<rt>xuě</rt></ruby><ruby>人<rt>rén</rt></ruby><ruby>做<rt>zuò</rt></ruby><ruby>了<rt>le</rt></ruby><ruby>一<rt>yí</rt></ruby><ruby>个<rt>gè</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>嘴<rt>zuǐ</rt></ruby><ruby>巴<rt>ba</rt></ruby>。
+            <ruby>大<rt>dà</rt></ruby><ruby>卫<rt>wèi</rt></ruby><ruby>说<rt>shuō</rt></ruby>：“<ruby>它<rt>tā</rt></ruby><ruby>看<rt>kàn</rt></ruby><ruby>起<rt>qǐ</rt></ruby><ruby>来<rt>lai</rt></ruby><ruby>真<rt>zhēn</rt></ruby><ruby>像<rt>xiàng</rt></ruby><ruby>一<rt>yì</rt></ruby><ruby>只<rt>zhī</rt></ruby>
+            <span class="vocabulary" data-definition="[n.] hippo">
+                <ruby>河<rt>hé</rt></ruby><ruby>马<rt>mǎ</rt></ruby>
+            </span>！”
+        </p>
+        <p>
+            <span class="vocabulary" data-definition="[adv.] everywhere">
+                <ruby>到<rt>dào</rt></ruby><ruby>处<rt>chù</rt></ruby>
+            </span>
+            <ruby>都<rt>dōu</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>白<rt>bái</rt></ruby><ruby>色<rt>sè</rt></ruby><ruby>的<rt>de</rt></ruby>。<ruby>这<rt>zhè</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>他<rt>tā</rt></ruby><ruby>们<rt>men</rt></ruby>
+            <span class="vocabulary" data-definition="[ordinal] the first time">
+                <ruby>第<rt>dì</rt></ruby><ruby>一<rt>yī</rt></ruby><ruby>次<rt>cì</rt></ruby>
+            </span>
+            <ruby>一<rt>yì</rt></ruby><ruby>起<rt>qǐ</rt></ruby><ruby>玩<rt>wán</rt></ruby><ruby>雪<rt>xuě</rt></ruby>。
+        </p>
+        <p>
+            <ruby>第<rt>dì</rt></ruby><ruby>二<rt>èr</rt></ruby><ruby>天<rt>tiān</rt></ruby>，<ruby>太<rt>tài</rt></ruby><ruby>阳<rt>yáng</rt></ruby><ruby>出<rt>chū</rt></ruby><ruby>来<rt>lái</rt></ruby><ruby>了<rt>le</rt></ruby>，<ruby>雪<rt>xuě</rt></ruby><ruby>人<rt>rén</rt></ruby><ruby>开<rt>kāi</rt></ruby><ruby>始<rt>shǐ</rt></ruby>
+            <span class="vocabulary" data-definition="[v.] melt">
+                <ruby>融<rt>róng</rt></ruby><ruby>化<rt>huà</rt></ruby>
+            </span><ruby>了<rt>le</rt></ruby>。
+        </p>
+    </div>
+
+    <div class="exercise-section">
+        <h3>Part 1: Reading Aloud</h3>
+        <p style="color:#666;">Read the text above. Pay attention to your pronunciation and the tones of "Bǎ" and "Dì-yī".</p>
+
+        <h3>Part 2: Multiple Choice</h3>
+        
+        <div class="question-block" id="q1-div">
+            <p><strong>1. What are the children doing outside?</strong></p>
+            <label><input type="radio" name="q1" value="wrong"> <ruby>游<rt>yóu</rt></ruby><ruby>泳<rt>yǒng</rt></ruby> (Swimming)</label><br>
+            <label><input type="radio" name="q1" value="correct"> <ruby>滚<rt>gǔn</rt></ruby><ruby>雪<rt>xuě</rt></ruby><ruby>球<rt>qiú</rt></ruby> (Rolling snowballs)</label><br>
+            <label><input type="radio" name="q1" value="wrong"> <ruby>看<rt>kàn</rt></ruby><ruby>电<rt>diàn</rt></ruby><ruby>视<rt>shì</rt></ruby> (Watching TV)</label><br>
+            <div style="margin-top:10px;">
+                <button class="btn-submit" onclick="checkAnswer('q1')">Submit</button>
+                <button class="btn-reset" onclick="resetQuestion('q1')">Reset</button>
+                <span id="q1-result" class="result-icon"></span>
+            </div>
+        </div>
+
+        <div class="question-block" id="q2-div">
+            <p><strong>2. What happened to the snowman the next day?</strong></p>
+            <label><input type="radio" name="q2" value="wrong"> <ruby>变<rt>biàn</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>了<rt>le</rt></ruby> (Became bigger)</label><br>
+            <label><input type="radio" name="q2" value="correct"> <ruby>融<rt>róng</rt></ruby><ruby>化<rt>huà</rt></ruby><ruby>了<rt>le</rt></ruby> (Melted)</label><br>
+            <label><input type="radio" name="q2" value="wrong"> <ruby>飞<rt>fēi</rt></ruby><ruby>走<rt>zǒu</rt></ruby><ruby>了<rt>le</rt></ruby> (Flew away)</label><br>
+            <div style="margin-top:10px;">
+                <button class="btn-submit" onclick="checkAnswer('q2')">Submit</button>
+                <button class="btn-reset" onclick="resetQuestion('q2')">Reset</button>
+                <span id="q2-result" class="result-icon"></span>
+            </div>
+        </div>
+
+        <div class="question-block" id="q3-div">
+            <p><strong>3. Why did David think the snowman looked like a "hippo"?</strong></p>
+            <label><input type="radio" name="q3" value="wrong"> <ruby>因<rt>yīn</rt></ruby><ruby>为<rt>wèi</rt></ruby><ruby>它<rt>tā</rt></ruby><ruby>没<rt>méi</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>眼<rt>yǎn</rt></ruby><ruby>睛<rt>jing</rt></ruby> (Because it had no eyes)</label><br>
+            <label><input type="radio" name="q3" value="correct"> <ruby>因<rt>yīn</rt></ruby><ruby>为<rt>wèi</rt></ruby><ruby>它<rt>tā</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>一<rt>yí</rt></ruby><ruby>个<rt>gè</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>嘴<rt>zuǐ</rt></ruby><ruby>巴<rt>ba</rt></ruby> (Because it had a big mouth)</label><br>
+            <label><input type="radio" name="q3" value="wrong"> <ruby>因<rt>yīn</rt></ruby><ruby>为<rt>wèi</rt></ruby><ruby>它<rt>tā</rt></ruby><ruby>喜<rt>xǐ</rt></ruby><ruby>欢<rt>huan</rt></ruby><ruby>吃<rt>chī</rt></ruby><ruby>草<rt>cǎo</rt></ruby> (Because it liked eating grass)</label><br>
+            <div style="margin-top:10px;">
+                <button class="btn-submit" onclick="checkAnswer('q3')">Submit</button>
+                <button class="btn-reset" onclick="resetQuestion('q3')">Reset</button>
+                <span id="q3-result" class="result-icon"></span>
+            </div>
+        </div>
+
+        <h3>Part 3: Practical Task</h3>
+        <div class="practice-box">
+            <p><strong>Task:</strong> Find 3 or 4 items at home. Arrange them in a line. Use <strong>"第 + number"</strong> to describe their order and tell us: <strong>Where did you put them? (把...放在...)</strong>. Bring a photo or drawing to share in the next class!</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkAnswer(qId) {
+        const options = document.getElementsByName(qId);
+        const resultSpan = document.getElementById(qId + '-result');
+        let selectedValue = "";
+        for (const option of options) {
+            if (option.checked) {
+                selectedValue = option.value;
+                break;
+            }
+        }
+        if (selectedValue === "") {
+            alert("Please select an answer first!");
+            return;
+        }
+        resultSpan.innerHTML = (selectedValue === "correct") ? "😊" : "❓";
+    }
+
+    function resetQuestion(qId) {
+        const options = document.getElementsByName(qId);
+        const resultSpan = document.getElementById(qId + '-result');
+        for (const option of options) {
+            option.checked = false;
+        }
+        resultSpan.innerHTML = "";
+    }
+</script>
+
+</body>
+</html>
