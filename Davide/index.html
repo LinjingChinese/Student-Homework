@@ -1,1 +1,211 @@
-Hi Davide
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味中文课：跟着矮马学表达</title>
+    <style>
+        :root {
+            --primary: #2196f3;
+            --secondary: #ff9800;
+            --success: #4caf50;
+            --danger: #f44336;
+            --bg: #f8f9fa;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: var(--bg); }
+        .card { background: white; border-radius: 20px; padding: 25px; margin-bottom: 40px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--primary); }
+        
+        /* 拼音样式 */
+        ruby { ruby-align: center; font-size: 1.2em; margin: 0 2px; }
+        rt { font-size: 0.6em; color: #666; font-weight: normal; }
+
+        /* 高亮生词 */
+        .new-word { color: #e91e63; font-weight: bold; text-decoration: underline; }
+
+        /* 隐藏解释 */
+        .en-overlay { background: #eee; color: #eee; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: 0.3s; display: inline-block; font-size: 0.9em; margin-top: 10px; }
+        .en-overlay:active, .en-overlay:hover { background: #f0f0f0; color: #555; }
+
+        /* 互动区域 */
+        .quiz-area { background: #fdfdfd; border: 2px dashed #ddd; padding: 20px; border-radius: 15px; margin-top: 20px; }
+        .btn { padding: 8px 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: 10px; }
+        .btn-submit { background: var(--success); color: white; }
+        .btn-reset { background: #9e9e9e; color: white; }
+        .feedback { font-size: 1.5em; margin-left: 10px; }
+
+        /* 拖拽块 */
+        .drag-container { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+        .drag-item { padding: 8px 15px; background: #fff; border: 2px solid var(--primary); border-radius: 8px; cursor: move; user-select: none; }
+
+        /* 选择题样式 */
+        .options-group { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+        .option-btn { text-align: left; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer; }
+        .option-btn:hover { background: #e3f2fd; }
+        .selected { border-color: var(--primary); background: #e3f2fd; }
+
+        .section-title { color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .intro-section { border-top-color: #2196f3; }
+        .appearance-section { border-top-color: #ff9800; }
+        .action-section { border-top-color: #4caf50; }
+        .reading-section { border-top-color: #9c27b0; }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">🐴 <ruby>矮<rt>ǎi</rt>马<rt>mǎ</rt></ruby>“<ruby>飘<rt>piāo</rt>飘<rt>piāo</rt></ruby>”<ruby>的<rt>de</rt></ruby><ruby>中<rt>zhōng</rt>文<rt>wén</rt></ruby><ruby>课<rt>kè</rt></ruby></h1>
+    <p style="text-align: center; color: #666;">Learn Chinese with Pony "Piaopiao" - Interactive Lesson</p>
+
+    <div class="card intro-section">
+        <h2 class="section-title">1. <ruby>自<rt>zì</rt>我<rt>wǒ</rt></ruby><ruby>介<rt>jiè</rt>绍<rt>shào</rt></ruby> (Self-introduction)</h2>
+        <p><strong><ruby>原<rt>yuán</rt>话<rt>huà</rt></ruby> (Original Quote):</strong><br>
+            “<ruby>我<rt>wǒ</rt></ruby><ruby>是<rt>shì</rt></ruby>……<ruby>来<rt>lái</rt>自<rt>zì</rt></ruby><ruby>上<rt>shàng</rt>海<rt>hǎi</rt></ruby><span class="new-word"><ruby>野<rt>yě</rt>生<rt>shēng</rt></ruby><ruby>动<rt>dòng</rt></ruby><ruby>物<rt>wù</rt></ruby></span><ruby>园<rt>yuán</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>海<rt>hǎi</rt>上<rt>shàng</rt></ruby><ruby>萌<rt>méng</rt></ruby><ruby>主<rt>zhǔ</rt></ruby><ruby>飘<rt>piāo</rt>飘<rt>piāo</rt></ruby>。<ruby>我<rt>wǒ</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>一<rt>yí</rt></ruby><ruby>个<rt>gè</rt></ruby><span class="new-word"><ruby>活<rt>huó</rt>泼<rt>pō</rt></ruby></span><ruby>开<rt>kāi</rt>朗<rt>lǎng</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>大<rt>dà</rt></ruby><ruby>男<rt>nán</rt></ruby><ruby>孩<rt>hái</rt></ruby>。”
+        </p>
+        <div class="en-overlay">Click to see English translation: "I am Piaopiao... from Shanghai Wild Animal Park. I am a lively and cheerful boy."</div>
+
+        <div class="quiz-area">
+            <p><strong>① <ruby>连<rt>lián</rt></ruby><ruby>词<rt>cí</rt></ruby><ruby>成<rt>chéng</rt></ruby><ruby>句<rt>jù</rt></ruby> (Drag to reorder):</strong><br>
+            <small>(Please arrange: My brother is a lively child.)</small></p>
+            <div id="drag-container-1" class="drag-container">
+                <div class="drag-item" draggable="true">的孩子。</div>
+                <div class="drag-item" draggable="true">活泼</div>
+                <div class="drag-item" draggable="true">哥哥</div>
+                <div class="drag-item" draggable="true">一个</div>
+                <div class="drag-item" draggable="true">是</div>
+            </div>
+            <button class="btn btn-submit" onclick="checkOrder(1, ['哥哥', '是', '一个', '活泼', '的孩子。'])">提交 (Submit)</button>
+            <button class="btn btn-reset" onclick="location.reload()">重置 (Reset)</button>
+            <span id="feedback-1" class="feedback"></span>
+
+            <p><strong>② <ruby>单<rt>dān</rt></ruby><ruby>项<rt>xiàng</rt></ruby><ruby>选<rt>xuǎn</rt></ruby><ruby>择<rt>zé</rt></ruby> (Multiple Choice):</strong><br>
+            <ruby>这<rt>zhè</rt></ruby><ruby>里<rt>li</rt></ruby><ruby>有<rt>yǒu</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>多<rt>duō</rt></ruby>( &nbsp;&nbsp;&nbsp; )。<small>(There are many wild animals here.)</small></p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 1)">A. <ruby>野<rt>yě</rt>生<rt>shēng</rt></ruby><ruby>动<rt>dòng</rt></ruby><ruby>物<rt>wù</rt></ruby></button>
+                <button class="option-btn" onclick="selectOption(this, 1)">B. <ruby>造<rt>zào</rt>型<rt>xíng</rt></ruby></button>
+            </div>
+            <button class="btn btn-submit" onclick="checkChoice(1, 'A')">提交 (Submit)</button>
+            <span id="feedback-choice-1" class="feedback"></span>
+        </div>
+    </div>
+
+    <div class="card appearance-section">
+        <h2 class="section-title">2. <ruby>颜<rt>yán</rt></ruby><ruby>值<rt>zhí</rt></ruby><ruby>与<rt>yǔ</rt></ruby><ruby>打<rt>dǎ</rt></ruby><ruby>扮<rt>ban</rt></ruby> (Appearance & Style)</h2>
+        <p><strong><ruby>原<rt>yuán</rt>话<rt>huà</rt></ruby> (Original Quote):</strong><br>
+            “<ruby>金<rt>jīn</rt></ruby><ruby>色<rt>sè</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>鬃<rt>zōng</rt></ruby><ruby>毛<rt>máo</rt></ruby><ruby>可<rt>kě</rt>以<rt>yǐ</rt></ruby><ruby>做<rt>zuò</rt></ruby><ruby>成<rt>chéng</rt></ruby><ruby>百<rt>bǎi</rt></ruby><ruby>变<rt>biàn</rt></ruby><span class="new-word"><ruby>造<rt>zào</rt>型<rt>xíng</rt></ruby></span>。<ruby>作<rt>zuò</rt></ruby><ruby>为<rt>wéi</rt></ruby><ruby>园<rt>yuán</rt></ruby><ruby>区<rt>qū</rt></ruby><ruby>的<rt>de</rt></ruby><span class="new-word"><ruby>颜<rt>yán</rt>值<rt>zhí</rt></ruby></span><ruby>担<rt>dān</rt></ruby><ruby>当<rt>dāng</rt></ruby>，<ruby>我<rt>wǒ</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>个<rt>gè</rt></ruby><ruby>十<rt>shí</rt></ruby><ruby>足<rt>zú</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>小<rt>xiǎo</rt></ruby><span class="new-word"><ruby>帅<rt>shuài</rt>哥<rt>ge</rt></ruby></span>。”
+        </p>
+        <div class="en-overlay">Click to see English translation: "The golden mane can be made into various styles. As the 'visual icon' of the park, I am a handsome guy."</div>
+
+        <div class="quiz-area">
+            <p><strong>① <ruby>选<rt>xuǎn</rt></ruby><ruby>词<rt>cí</rt></ruby><ruby>填<rt>tián</rt></ruby><ruby>空<rt>kòng</rt></ruby> (Select Word):</strong><br>
+            <ruby>他<rt>tā</rt></ruby><ruby>长<rt>zhǎng</rt></ruby><ruby>得<rt>de</rt></ruby><ruby>很<rt>hěn</rt></ruby><ruby>帅<rt>shuài</rt></ruby>，<ruby>是<rt>shì</rt></ruby><ruby>班<rt>bān</rt></ruby><ruby>级<rt>jí</rt></ruby><ruby>里<rt>li</rt></ruby><ruby>的<rt>de</rt></ruby> ( &nbsp;&nbsp;&nbsp; )。</p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 2)">A. <ruby>探<rt>tàn</rt>索<rt>suǒ</rt></ruby></button>
+                <button class="option-btn" onclick="selectOption(this, 2)">B. <ruby>颜<rt>yán</rt>值<rt>zhí</rt></ruby><ruby>担<rt>dān</rt></ruby><ruby>当<rt>dāng</rt></ruby></button>
+            </div>
+            <button class="btn btn-submit" onclick="checkChoice(2, 'B')">提交 (Submit)</button>
+            <span id="feedback-choice-2" class="feedback"></span>
+
+            <p><strong>② <ruby>拓<rt>tuò</rt>展<rt>zhǎn</rt></ruby><ruby>小<rt>xiǎo</rt></ruby><ruby>活<rt>huó</rt>动<rt>dòng</rt></ruby> (Open Activity):</strong><br>
+            <ruby>如<rt>rú</rt>果<rt>guǒ</rt></ruby><ruby>你<rt>nǐ</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>小<rt>xiǎo</rt></ruby><ruby>马<rt>mǎ</rt></ruby>，<ruby>你<rt>nǐ</rt></ruby><ruby>想<rt>xiǎng</rt></ruby><ruby>要<rt>yào</rt></ruby><ruby>什<rt>shén</rt><ruby>么<rt>me</rt><ruby>样<rt>yàng</rt></ruby><ruby>的<rt>de</rt></ruby><strong><ruby>造<rt>zào</rt>型<rt>xíng</rt></ruby></strong>？<br>
+            <textarea style="width:100%; height:60px;" placeholder="I want to have a... (e.g. 酷 / 漂亮造型)"></textarea>
+        </div>
+    </div>
+
+    <div class="card reading-section">
+        <h2 class="section-title">3. <ruby>阅<rt>yuè</rt>读<rt>dú</rt></ruby><ruby>理<rt>lǐ</rt></ruby><ruby>解<rt>jiě</rt></ruby> (Reading Comprehension)</h2>
+        <p><em>Check how much you understood from the video!</em></p>
+        
+        <div class="quiz-area">
+            <p>Q1: <ruby>飘<rt>piāo</rt>飘<rt>piāo</rt></ruby><ruby>几<rt>jǐ</rt></ruby><ruby>岁<rt>suì</rt></ruby><ruby>了<rt>le</rt></ruby>？<small>(How old is Piaopiao?)</small></p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 'r1')">A. 3 <ruby>岁<rt>suì</rt></ruby></button>
+                <button class="option-btn" onclick="selectOption(this, 'r1')">B. 13 <ruby>岁<rt>suì</rt></ruby></button>
+            </div>
+            <button class="btn btn-submit" onclick="checkChoice('r1', 'B')">提交</button> <span id="feedback-r1" class="feedback"></span>
+
+            <p>Q2: <ruby>谁<rt>shéi</rt></ruby><ruby>喜<rt>xǐ</rt>欢<rt>huan</rt></ruby><ruby>骑<rt>qí</rt></ruby><ruby>在<rt>zài</rt></ruby><ruby>飘<rt>piāo</rt>飘<rt>piāo</rt></ruby><ruby>的<rt>de</rt></ruby><ruby>背<rt>bèi</rt></ruby><ruby>上<rt>shàng</rt></ruby>？<small>(Who likes to ride on his back?)</small></p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 'r2')">A. <ruby>黑<rt>hēi</rt></ruby><ruby>猩<rt>xīng</rt></ruby><ruby>猩<rt>xīng</rt></ruby></button>
+                <button class="option-btn" onclick="selectOption(this, 'r2')">B. <ruby>蜘<rt>zhī</rt>蛛<rt>zhū</rt></ruby><ruby>猴<rt>hóu</rt></ruby><ruby>豆<rt>dòu</rt></ruby><ruby>豆<rt>dòu</rt></ruby></button>
+            </div>
+            <button class="btn btn-submit" onclick="checkChoice('r2', 'B')">提交</button> <span id="feedback-r2" class="feedback"></span>
+
+            <p>Q3: <ruby>飘<rt>piāo</rt>飘<rt>piāo</rt></ruby><ruby>喜<rt>xǐ</rt>欢<rt>huan</rt></ruby><ruby>做<rt>zuò</rt></ruby><ruby>什<rt>shén</rt><ruby>么<rt>me</rt>？<small>(What does he like to do?)</small></p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 'r3')">A. <ruby>迎<rt>yíng</rt>接<rt>jiē</rt></ruby><ruby>宾<rt>bīn</rt>客<rt>kè</rt></ruby></button>
+                <button class="option-btn" onclick="selectOption(this, 'r3')">B. <ruby>在<rt>zài</rt></ruby><ruby>家<rt>jiā</rt></ruby><ruby>睡<rt>shuì</rt></ruby><ruby>觉<rt>jiào</rt></ruby></button>
+            </div>
+            <button class="btn btn-submit" onclick="checkChoice('r3', 'A')">提交</button> <span id="feedback-r3" class="feedback"></span>
+
+            <p>Q4: <ruby>飘<rt>piāo</rt>飘<rt>piāo</rt></ruby><ruby>是<rt>shì</rt></ruby><ruby>怎<rt>zěn</rt></ruby><ruby>样<rt>yàng</rt></ruby><ruby>看<rt>kàn</rt></ruby><ruby>黑<rt>hēi</rt></ruby><ruby>猩<rt>xīng</rt></ruby><ruby>猩<rt>xīng</rt></ruby><ruby>的<rt>de</rt></ruby>？<small>(How does he look at the chimpanzee?)</small></p>
+            <div class="options-group">
+                <button class="option-btn" onclick="selectOption(this, 'r4')">A. <span class="new-word"><ruby>好<rt>hào</rt>奇<rt>qí</rt></ruby></span><ruby>地<rt>de</rt></ruby><ruby>打<rt>dǎ</rt>量<rt>liang</rt></ruby></button>
+                <button class="option-btn" onclick="selectOption(this, 'r4')">B. <ruby>生<rt>shēng</rt></ruby><ruby>气<rt>qì</rt></ruby><ruby>地<rt>de</rt></ruby><ruby>看<rt>kàn</rt></ruby></button>
+            </div>
+            <button class="btn btn-submit" onclick="checkChoice('r4', 'A')">提交</button> <span id="feedback-r4" class="feedback"></span>
+        </div>
+    </div>
+
+    <script>
+        // 拖拽逻辑
+        const containers = document.querySelectorAll('.drag-container');
+        containers.forEach(container => {
+            container.addEventListener('dragover', e => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientX);
+                const draggable = document.querySelector('.dragging');
+                if (afterElement == null) {
+                    container.appendChild(draggable);
+                } else {
+                    container.insertBefore(draggable, afterElement);
+                }
+            });
+        });
+
+        document.querySelectorAll('.drag-item').forEach(item => {
+            item.addEventListener('dragstart', () => item.classList.add('dragging'));
+            item.addEventListener('dragend', () => item.classList.remove('dragging'));
+        });
+
+        function getDragAfterElement(container, x) {
+            const draggableElements = [...container.querySelectorAll('.drag-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = x - box.left - box.width / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function checkOrder(id, correctArr) {
+            const container = document.getElementById('drag-container-' + id);
+            const items = [...container.querySelectorAll('.drag-item')];
+            const userArr = items.map(item => item.innerText.trim());
+            const isCorrect = JSON.stringify(userArr) === JSON.stringify(correctArr);
+            document.getElementById('feedback-' + id).innerHTML = isCorrect ? "😊 正确 (Correct)!" : "😢 再试一次 (Try again)!";
+        }
+
+        // 选择逻辑
+        let selections = {};
+        function selectOption(btn, group) {
+            const buttons = btn.parentElement.querySelectorAll('.option-btn');
+            buttons.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selections[group] = btn.innerText.substring(0, 1);
+        }
+
+        function checkChoice(group, correct) {
+            const feedback = document.getElementById('feedback-choice-' + group) || document.getElementById('feedback-' + group);
+            if (selections[group] === correct) {
+                feedback.innerHTML = "😊 正确 (Correct)!";
+                feedback.style.color = "green";
+            } else {
+                feedback.innerHTML = "😢 错误 (Wrong)!";
+                feedback.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
