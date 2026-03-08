@@ -1,1 +1,234 @@
-Hi Karen
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Step 4: 完整实战演练与进阶阅读</title>
+    <style>
+        :root {
+            --primary-teal: #008080;
+            --accent-orange: #ff9800;
+            --accent-purple: #9b59b6;
+            --accent-red: #e74c3c;
+            --text-main: #2c3e50;
+            --pinyin-color: #95a5a6;
+        }
+        body { font-family: 'PingFang SC', sans-serif; background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 30px; }
+        
+        .section-container { width: 950px; background: white; border-radius: 24px; padding: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h2 { color: var(--primary-teal); text-align: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-top: 0; font-size: 26px; }
+
+        /* --- 1. 角色扮演区 (完整流程) --- */
+        .chat-area { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .role-wrapper { display: flex; align-items: flex-start; gap: 15px; }
+        .avatar { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .student-av { background: #4caf50; } .stranger-av { background: #ff9800; } .driver-av { background: #2196f3; }
+        
+        .role-card { padding: 15px 20px; border-radius: 18px; flex-grow: 1; border: 1px solid #eee; transition: 0.3s; }
+        .student-box { background: #e8f5e9; } .stranger-box { background: #fff3e0; } .driver-box { background: #e3f2fd; }
+        
+        .role-name { font-size: 11px; font-weight: bold; margin-bottom: 4px; display: block; color: rgba(0,0,0,0.4); }
+        .b-cn { font-size: 19px; font-weight: bold; color: var(--text-main); display: block; }
+        .b-py { font-size: 13px; color: var(--pinyin-color); display: block; margin-top: 4px; }
+        .b-en { font-size: 12px; color: #bbb; display: block; margin-top: 2px; }
+
+        .scene-transition { text-align: center; font-size: 14px; color: #aaa; font-style: italic; margin: 10px 0 10px 70px; padding: 8px; border-left: 3px dashed #eee; background: #fafafa; border-radius: 8px; }
+
+        /* --- 2. 阅读理解区 (新文章 + 悬停特效) --- */
+        .reading-content { line-height: 2; margin-top: 20px; }
+        .reading-line { margin-bottom: 25px; padding: 10px; border-radius: 12px; }
+        .r-cn { font-size: 24px; font-weight: bold; color: #333; display: block; }
+        .r-py { font-size: 16px; color: var(--pinyin-color); display: block; margin-top: 6px; }
+        .r-en { font-size: 14px; color: #bbb; display: block; margin-top: 4px; border-top: 1px solid #f9f9f9; padding-top: 4px; }
+
+        /* 悬停词典样式 (Tooltip) */
+        .dict-hover {
+            color: var(--primary-teal);
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            cursor: help;
+            position: relative;
+            display: inline-block;
+        }
+        .dict-hover::after {
+            content: attr(data-dict);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            line-height: 1.4;
+        }
+        .dict-hover:hover::after { visibility: visible; opacity: 1; }
+
+        /* 交互标记 */
+        .yao-target { transition: 0.3s; padding: 0 2px; }
+        .yao-highlight { color: var(--accent-red) !important; font-weight: bold; background: #fffde7; outline: 1px dashed var(--accent-red); }
+        .vocab-target { display: inline-block; cursor: pointer; transition: 0.3s; border-bottom: 2px solid var(--accent-purple); color: var(--accent-purple); font-weight: bold; }
+        .is-blurred { filter: blur(6px); background: #eee; color: transparent !important; }
+
+        .btn-group { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+        .btn { padding: 12px 25px; border-radius: 50px; border: none; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; min-width: 150px; }
+        .btn-orange { background: var(--accent-orange); }
+        .btn-teal { background: var(--primary-teal); }
+        .btn-purple { background: var(--accent-purple); }
+    </style>
+</head>
+<body>
+
+    <div class="section-container">
+        <h2>🎭 实战剧场：从出发到买单 (Role Play)</h2>
+        <div class="chat-area">
+            <div class="role-wrapper">
+                <div class="avatar student-av">🙋‍♂️</div>
+                <div class="role-card student-box">
+                    <span class="role-name">学生 (Student)</span>
+                    <span class="b-cn">请问，超市怎么走？</span>
+                    <span class="b-py">qǐngwèn, chāoshì zěnme zǒu?</span>
+                    <span class="b-en">Excuse me, how do I get to the supermarket?</span>
+                </div>
+            </div>
+            <div class="role-wrapper">
+                <div class="avatar stranger-av">🚶</div>
+                <div class="role-card stranger-box">
+                    <span class="role-name">路人 (Passerby)</span>
+                    <span class="b-cn">超市有点远，你可以坐出租车去。</span>
+                    <span class="b-py">chāoshì yǒudiǎn yuǎn, nǐ kěyǐ zuò chūzūchē qù.</span>
+                    <span class="b-en">The supermarket is a bit far, you can take a taxi.</span>
+                </div>
+            </div>
+
+            <div class="scene-transition">🚕 出租车来了 (Taxi arrives...)</div>
+
+            <div class="role-wrapper">
+                <div class="avatar driver-av">👨‍✈️</div>
+                <div class="role-card driver-box">
+                    <span class="role-name">司机 (Driver)</span>
+                    <span class="b-cn">您好！请问您的手机号是多少？</span>
+                    <span class="b-py">nínhǎo! qǐngwèn nín de shǒujīhào shì duōshǎo?</span>
+                    <span class="b-en">Hello! May I ask what your phone number is?</span>
+                </div>
+            </div>
+            <div class="role-wrapper">
+                <div class="avatar student-av">🙋‍♂️</div>
+                <div class="role-card student-box">
+                    <span class="role-name">学生 (Student)</span>
+                    <span class="b-cn">我的手机号是：138-1111-1919。</span>
+                    <span class="b-py">wǒ de shǒujīhào shì: yāo sān bā - yāo yāo yāo yāo - yāo jiǔ yāo jiǔ.</span>
+                    <span class="b-en">My phone number is 138-1111-1919.</span>
+                </div>
+            </div>
+
+            <div class="scene-transition">🛒 到了超市门口 (Arrived at the supermarket...)</div>
+
+            <div class="role-wrapper">
+                <div class="avatar student-av">🙋‍♂️</div>
+                <div class="role-card student-box">
+                    <span class="role-name">学生 (Student)</span>
+                    <span class="b-cn">可以扫码支付吗？</span>
+                    <span class="b-py">kěyǐ sǎomǎ zhīfù ma?</span>
+                    <span class="b-en">Can I pay by scanning the QR code?</span>
+                </div>
+            </div>
+            <div class="role-wrapper">
+                <div class="avatar driver-av">👨‍✈️</div>
+                <div class="role-card driver-box">
+                    <span class="role-name">司机 (Driver)</span>
+                    <span class="b-cn">可以，这是我的账号二维码：818111。</span>
+                    <span class="b-py">kěyǐ, zhè shì wǒ de zhànghào èrwéimǎ: bā yāo bā yāo yāo yāo.</span>
+                    <span class="b-en">Yes, this is my account QR code: 818111.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <h2>📖 阅读练习：《大卫去超市》 (Reading)</h2>
+        <div class="reading-content">
+            <div class="reading-line">
+                <span class="r-cn">大卫是一个大学生，他刚刚来到这所学校学习。</span>
+                <span class="r-py">Dàwèi shì yíge dàxuésheng, tā gānggāng láidào zhè suǒ xuéxiào xuéxí.</span>
+                <span class="r-en">David is a college student, he just arrived at this school to study.</span>
+            </div>
+            <div class="reading-line">
+                <span class="r-cn">一天，他坐<span class="vocab-target" onclick="toggleSingle(this)">出租车</span>去<span class="vocab-target" onclick="toggleSingle(this)">超市</span>买东西。</span>
+                <span class="r-py">Yìtiān, tā zuò chūzūchē qù chāoshì mǎi dōngxi.</span>
+                <span class="r-en">One day, he took a taxi to the supermarket to buy things.</span>
+            </div>
+            <div class="reading-line">
+                <span class="r-cn">他买了很多<span class="vocab-target" onclick="toggleSingle(this)">零食</span>、面包和牛奶。</span>
+                <span class="r-py">Tā mǎile hěnduō língshí, miànbāo hé niúnǎi.</span>
+                <span class="r-en">He bought many snacks, bread, and milk.</span>
+            </div>
+            <div class="reading-line">
+                <span class="r-cn">在<span class="dict-hover" data-dict="mǎidān | (v.phrase) | To pay the bill">买单</span>的时候，大卫问：“可以<span class="vocab-target" onclick="toggleSingle(this)">扫码支付</span>吗？”</span>
+                <span class="r-py">Zài mǎidān de shíhou, Dàwèi wèn: "Kěyǐ sǎomǎ zhīfù ma?"</span>
+                <span class="r-en">When paying, David asked: "Can I pay by scanning a QR code?"</span>
+            </div>
+            <div class="reading-line">
+                <span class="r-cn"><span class="dict-hover" data-dict="yíngyèyuán | (n.) | Shop assistant / Clerk">营业员</span>说：“可以。但是你要先<span class="dict-hover" data-dict="zhùcè | (v.) | To register">注册</span>。”</span>
+                <span class="r-py">Yíngyèyuán shuō: "Kěyǐ. Dànshì nǐ yào xiān zhùcè."</span>
+                <span class="r-en">The clerk said: "Yes, but you need to register first."</span>
+            </div>
+            <div class="reading-line">
+                <span class="r-cn">大卫用手机号注册了<span class="dict-hover" data-dict="huìyuán | (n.) | Member">会员</span>，他收到一个<span class="vocab-target" onclick="toggleSingle(this)">验证码</span>：<span class="yao-target">115 281</span>。</span>
+                <span class="r-py">Dàwèi yòng shǒujīhào zhùcè le huìyuán, tā shōudàole yíge yànzhèngmǎ: yāo yāo wǔ, èr bā yāo.</span>
+                <span class="r-en">David registered as a member and received a code: 115 281.</span>
+            </div>
+            <div class="reading-line">
+                <span class="r-cn">付完钱，他坐出租车回学校了。</span>
+                <span class="r-py">Fùwán qián, tā zuò chūzūchē huí xuéxiào le.</span>
+                <span class="r-en">After paying, he took a taxi back to school.</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-orange" onclick="step1Skimming()">Step 1: 扫读找 yāo</button>
+            <button class="btn btn-teal" onclick="toggleQA()">Step 2: 逻辑问答</button>
+            <button class="btn btn-purple" id="blur-btn" onclick="toggleAllBlur()">Step 3: 模糊生词</button>
+        </div>
+
+        <div id="qa-box" style="display:none; margin-top:20px; padding:15px; background:#f0f7f7; border-left:5px solid var(--primary-teal); font-size:14px;">
+            <strong>问答任务：</strong><br>
+            1. 大卫买了什么？<br>
+            2. 为什么要注册会员？<br>
+            3. 验证码是多少？(请用 yāo 朗读)
+        </div>
+    </div>
+
+    <script>
+        function step1Skimming() {
+            const targets = document.querySelectorAll('.yao-target');
+            targets.forEach(t => t.classList.toggle('yao-highlight'));
+        }
+        function toggleQA() {
+            const qa = document.getElementById('qa-box');
+            qa.style.display = qa.style.display === 'none' ? 'block' : 'none';
+        }
+        function toggleAllBlur() {
+            const vocabs = document.querySelectorAll('.vocab-target');
+            const btn = document.getElementById('blur-btn');
+            const anyBlurred = Array.from(vocabs).some(v => v.classList.contains('is-blurred'));
+            if (anyBlurred) {
+                vocabs.forEach(v => v.classList.remove('is-blurred'));
+                btn.innerText = "Step 3: 模糊生词";
+            } else {
+                vocabs.forEach(v => v.classList.add('is-blurred'));
+                btn.innerText = "点击恢复全部";
+            }
+        }
+        function toggleSingle(element) {
+            element.classList.toggle('is-blurred');
+        }
+    </script>
+</body>
+</html>
