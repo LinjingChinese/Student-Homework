@@ -1,184 +1,271 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HSK 2 综合练习：我的斋月</title>
+    <title>Chinese Sentence Scramble Quiz</title>
     <style>
-        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        .section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        h1 { color: #2c3e50; text-align: center; border-bottom: 2px solid #27ae60; padding-bottom: 10px; }
-        h2 { color: #27ae60; border-left: 5px solid #27ae60; padding-left: 10px; }
-        .pinyin { color: #666; font-size: 0.9em; margin: 2px 0; }
-        .english { color: #999; font-size: 0.85em; font-style: italic; margin-bottom: 15px; }
-        .text-line { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
-        .question-box { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 15px; position: relative; }
-        .options { margin: 10px 0; }
-        .btn-check { background-color: #3498db; color: white; border: none; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 10px; }
-        .btn-check:hover { background-color: #2980b9; }
-        .result-mark { font-size: 24px; margin-left: 15px; vertical-align: middle; }
-        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; margin-top: 10px; }
-        .example { color: #e67e22; font-weight: bold; background: #fff5eb; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
-        .instruction-note { color: #e74c3c; font-weight: bold; font-size: 0.9em; margin-top: 5px; }
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00b894;
+            --accent: #fab1a0;
+            --bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            padding: 20px;
+            color: #2d3436;
+        }
+
+        .quiz-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        h1 { color: var(--primary); text-align: center; font-size: 2.4em; }
+        .intro { text-align: center; color: #636e72; margin-bottom: 30px; font-weight: 500; }
+
+        .question-box {
+            border: 2px solid #edf2f7;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .english-meaning {
+            background: #f1f2f6;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-style: italic;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .word-tiles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tile {
+            background: #fff;
+            border: 1px solid #dfe6e9;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 2px 2px 0px var(--accent);
+        }
+
+        .tile .py { font-size: 0.8em; color: #b2bec3; }
+        .tile .en { font-size: 0.75em; color: #0984e3; }
+
+        .option-item {
+            display: block;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-item:hover { background: #f9f9ff; border-color: var(--primary); }
+        .option-item input { margin-right: 15px; transform: scale(1.3); }
+
+        .py-small { color: #636e72; font-size: 0.9em; margin-top: 4px; }
+
+        .btn-check {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .feedback { font-size: 1.8em; margin-left: 20px; vertical-align: middle; }
+
+        /* Writing Survey Section */
+        .survey-box {
+            margin-top: 50px;
+            padding: 30px;
+            background: #6c5ce70a;
+            border: 3px dashed var(--primary);
+            border-radius: 20px;
+        }
+
+        .survey-box h3 { color: var(--primary); margin-top: 0; }
+        .example-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 0.95em;
+            border-left: 4px solid var(--accent);
+        }
+        
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #dcdde1;
+            font-size: 1.1em;
+            margin-top: 15px;
+            box-sizing: border-box;
+        }
+
+        .footer-note {
+            display: block;
+            margin-top: 15px;
+            color: #d63031;
+            font-weight: bold;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🌙 我的斋月 (My Ramadan)</h1>
+<div class="quiz-container">
+    <h1>Sentence Reconstruction</h1>
+    <p class="intro">Instructions: Look at the English meaning and the word tiles, then choose the correct Chinese sentence.</p>
 
-    <div class="section">
-        <h2>第一部分：阅读 (Reading)</h2>
+    <div class="question-box" id="q1">
+        <div class="english-meaning">Meaning: Friends are not satisfied with the food in this restaurant.</div>
+        <div class="word-tiles">
+            <div class="tile">满意<br><span class="py">mǎnyì</span><br><span class="en">satisfied</span></div>
+            <div class="tile">朋友<br><span class="py">péngyǒu</span><br><span class="en">friend</span></div>
+            <div class="tile">饭馆<br><span class="py">fànguǎn</span><br><span class="en">restaurant</span></div>
+            <div class="tile">菜<br><span class="py">cài</span><br><span class="en">dishes</span></div>
+            <div class="tile">对...不<br><span class="py">duì...bù</span><br><span class="en">not towards</span></div>
+        </div>
+        <div class="options">
+            <label class="option-item"><input type="radio" name="ans1" value="w1"> 这个饭馆的菜对朋友不满意。<br><span class="py-small">Zhège fànguǎn de cài duì péngyǒu bù mǎnyì.</span></label>
+            <label class="option-item"><input type="radio" name="ans1" value="correct"> 朋友对这个饭馆的菜不满意。<br><span class="py-small">Péngyǒu duì zhège fànguǎn de cài bù mǎnyì.</span></label>
+            <label class="option-item"><input type="radio" name="ans1" value="w2"> 对朋友这个饭馆不满意菜。<br><span class="py-small">Duì péngyǒu zhège fànguǎn bù mǎnyì cài.</span></label>
+        </div>
+        <button class="btn-check" onclick="verify('q1', 'correct')">Check Answer</button>
+        <span class="feedback"></span>
+    </div>
+
+    <div class="question-box" id="q2">
+        <div class="english-meaning">Meaning: The pandas in the park are really cute, let's go see them again next time.</div>
+        <div class="word-tiles">
+            <div class="tile">熊猫<br><span class="py">xióngmāo</span><br><span class="en">panda</span></div>
+            <div class="tile">可爱<br><span class="py">kě'ài</span><br><span class="en">cute</span></div>
+            <div class="tile">下次<br><span class="py">xiàcì</span><br><span class="en">next time</span></div>
+            <div class="tile">再<br><span class="py">zài</span><br><span class="en">again</span></div>
+            <div class="tile">吧<br><span class="py">ba</span><br><span class="en">part.</span></div>
+        </div>
+        <div class="options">
+            <label class="option-item"><input type="radio" name="ans2" value="correct"> 公园里的熊猫真可爱，我们下次再去看吧。<br><span class="py-small">Gōngyuán lǐ de xióngmāo zhēn kě'ài, wǒmen xiàcì zài qù kàn ba.</span></label>
+            <label class="option-item"><input type="radio" name="ans2" value="w1"> 熊猫下次在公园里去再看吧，真可爱。<br><span class="py-small">Xióngmāo xiàcì zài gōngyuán lǐ qù zài kàn ba, zhēn kě'ài.</span></label>
+            <label class="option-item"><input type="radio" name="ans2" value="w2"> 我们真可爱，下次再去看公园里的熊猫吧。<br><span class="py-small">Wǒmen zhēn kě'ài, xiàcì zài qù kàn gōngyuán lǐ de xióngmāo ba.</span></label>
+        </div>
+        <button class="btn-check" onclick="verify('q2', 'correct')">Check Answer</button>
+        <span class="feedback"></span>
+    </div>
+
+    <div class="question-box" id="q3">
+        <div class="english-meaning">Meaning: You didn't go to school yesterday, and you didn't go again today?</div>
+        <div class="word-tiles">
+            <div class="tile">昨天<br><span class="py">zuótiān</span><br><span class="en">yesterday</span></div>
+            <div class="tile">今天<br><span class="py">jīntiān</span><br><span class="en">today</span></div>
+            <div class="tile">又<br><span class="py">yòu</span><br><span class="en">again</span></div>
+            <div class="tile">没去<br><span class="py">méi qù</span><br><span class="en">didn't go</span></div>
+        </div>
+        <div class="options">
+            <label class="option-item"><input type="radio" name="ans3" value="w1"> 又你昨天没去学校，今天没去上课？<br><span class="py-small">Yòu nǐ zuótiān méi qù xuéxiào, jīntiān méi qù shàngkè?</span></label>
+            <label class="option-item"><input type="radio" name="ans3" value="w2"> 你昨天又没去学校上课，今天没去？<br><span class="py-small">Nǐ zuótiān yòu méi qù xuéxiào shàngkè, jīntiān méi qù?</span></label>
+            <label class="option-item"><input type="radio" name="ans3" value="correct"> 你昨天没去学校上课，今天又没去？<br><span class="py-small">Nǐ zuótiān méi qù xuéxiào shàngkè, jīntiān yòu méi qù?</span></label>
+        </div>
+        <button class="btn-check" onclick="verify('q3', 'correct')">Check Answer</button>
+        <span class="feedback"></span>
+    </div>
+
+    <div class="question-box" id="q4">
+        <div class="english-meaning">Meaning: The train is coming soon. Please be quiet and wait a little longer.</div>
+        <div class="word-tiles">
+            <div class="tile">马上<br><span class="py">mǎshàng</span><br><span class="en">immediately</span></div>
+            <div class="tile">安静<br><span class="py">ānjìng</span><br><span class="en">quiet</span></div>
+            <div class="tile">再<br><span class="py">zài</span><br><span class="en">again/further</span></div>
+            <div class="tile">一会儿<br><span class="py">yīhuìr</span><br><span class="en">a while</span></div>
+        </div>
+        <div class="options">
+            <label class="option-item"><input type="radio" name="ans4" value="correct"> 火车马上就来了。请大家安静，再等一会儿。<br><span class="py-small">Huǒchē mǎshàng jiù lái le. Qǐng dàjiā ānjìng, zài děng yīhuìr.</span></label>
+            <label class="option-item"><input type="radio" name="ans4" value="w1"> 请安静，火车再等一会儿马上就来了。<br><span class="py-small">Qǐng ānjìng, huǒchē zài děng yīhuìr mǎshàng jiù lái le.</span></label>
+            <label class="option-item"><input type="radio" name="ans4" value="w2"> 火车马上安静了。请大家再等一会儿就来。<br><span class="py-small">Huǒchē mǎshàng ānjìng le. Qǐng dàjiā zài děng yīhuìr jiù lái.</span></label>
+        </div>
+        <button class="btn-check" onclick="verify('q4', 'correct')">Check Answer</button>
+        <span class="feedback"></span>
+    </div>
+
+    <div class="question-box" id="q5">
+        <div class="english-meaning">Meaning: The elevator is about to reach the 10th floor.</div>
+        <div class="word-tiles">
+            <div class="tile">电梯<br><span class="py">diàntī</span><br><span class="en">elevator</span></div>
+            <div class="tile">马上<br><span class="py">mǎshàng</span><br><span class="en">immediately</span></div>
+            <div class="tile">第十层<br><span class="py">dì shí céng</span><br><span class="en">10th floor</span></div>
+            <div class="tile">要...了<br><span class="py">yào...le</span><br><span class="en">about to</span></div>
+        </div>
+        <div class="options">
+            <label class="option-item"><input type="radio" name="ans5" value="w1"> 第十层马上要到电梯了。<br><span class="py-small">Dì shí céng mǎshàng yào dào diàntī le.</span></label>
+            <label class="option-item"><input type="radio" name="ans5" value="correct"> 电梯马上要到第十层了。<br><span class="py-small">Diàntī mǎshàng yào dào dì shí céng le.</span></label>
+            <label class="option-item"><input type="radio" name="ans5" value="w2"> 马上要电梯到第十层了。<br><span class="py-small">Mǎshàng yào diàntī dào dì shí céng le.</span></label>
+        </div>
+        <button class="btn-check" onclick="verify('q5', 'correct')">Check Answer</button>
+        <span class="feedback"></span>
+    </div>
+
+    <div class="survey-box">
+        <h3>📊 Daily Activity Survey</h3>
+        <p><strong>Writing Task:</strong> Please interview a friend or describe your own habits using the keywords <strong>"又" (again - happened)</strong> and <strong>"再" (again - future/plan)</strong>.</p>
         
-        <div class="text-line">
-            <p>在土耳其，斋月是一个非常重要的月份。</p>
-            <p class="pinyin">Zài Tǔ'ěrqí, Zhāiyuè shì yíɡè fēichánɡ zhònɡyào de yuèfèn.</p>
-            <p class="english">In Turkey, Ramadan is a very important month.</p>
+        <div class="example-box">
+            <strong>Example:</strong><br>
+            Davide昨天去游了泳，今天<strong>又</strong>去游泳，不知道明天会不会<strong>再</strong>去游泳？<br>
+            <span class="py-small">Davide zuótiān qù yóu le yǒng, jīntiān yòu qù yóuyǒng, bù zhīdào míngtiān huì bù huì zài qù yóuyǒng?</span><br>
+            <span style="font-size: 0.85em; color: #0984e3; font-style: italic;">Davide went swimming yesterday and went again today; I wonder if he will go swimming again tomorrow?</span>
         </div>
 
-        <div class="text-line">
-            <p>斋月的时候，我们每天在黎明前起床吃早饭。</p>
-            <p class="pinyin">Zhāiyuè de shíhou, wǒmen měitiān zài límínɡ qián qǐchuánɡ chī zǎofàn.</p>
-            <p class="english">During Ramadan, we wake up before dawn every day to eat breakfast.</p>
-        </div>
-
-        <div class="text-line">
-            <p>白天我不吃饭，也不喝水。虽然我很饿，但是我觉得很快乐。</p>
-            <p class="pinyin">Báitiān wǒ bù chīfàn, yě bù hē shuǐ. Suīrán wǒ hěn è, dànshì wǒ juéde hěn kuàilè.</p>
-            <p class="english">During the day, I don't eat or drink water. Although I am hungry, I feel very happy.</p>
-        </div>
-
-        <div class="text-line">
-            <p>我想学习耐心。富人和穷人都会在这个月互相帮助。</p>
-            <p class="pinyin">Wǒ xiǎnɡ xuéxí nàixīn. Fùrén hé qiónɡrén dōu huì zài zhèɡe yuè hùxiānɡ bānɡzhù.</p>
-            <p class="english">I want to learn patience. Rich people and poor people all help each other this month.</p>
-        </div>
-
-        <div class="text-line">
-            <p>天黑以后，我和家人、朋友一起吃大餐，叫 Iftar。</p>
-            <p class="pinyin">Tiān hēi yǐhòu, wǒ hé jiārén, pénɡyou yìqǐ chī dàcān, jiào Iftar.</p>
-            <p class="english">After it gets dark, I eat a big meal with family and friends, called Iftar.</p>
-        </div>
-
-        <div class="text-line">
-            <p>斋月结束以后，大家穿新衣服，给孩子很多糖果，非常开心！</p>
-            <p class="pinyin">Zhāiyuè jiéshù yǐhòu, dàjiā chuān xīn yīfu, ɡěi háizi hěnduō tánɡɡuǒ, fēichánɡ kāixīn!</p>
-            <p class="english">After Ramadan ends, everyone wears new clothes and gives children lots of candy. Very happy!</p>
-        </div>
+        <textarea placeholder="Write your sentences here..."></textarea>
+        <span class="footer-note">📸 Task complete! Please take a screenshot and share it with your teacher.</span>
     </div>
 
-    <div class="section">
-        <h2>第二部分：选择题 (Multiple Choice)</h2>
-        
-        <div class="question-box">
-            <p>1. 斋月的时候，他们什么时候起床吃早饭？</p>
-            <p class="pinyin">Zhāiyuè de shíhou, tāmen shénme shíhou qǐchuánɡ chī zǎofàn?</p>
-            <div class="options">
-                <label><input type="radio" name="q1" value="A"> A. 中午 (Zhōnɡwǔ)</label><br>
-                <label><input type="radio" name="q1" value="B"> B. 黎明前 (Límínɡ qián)</label>
-            </div>
-            <button class="btn-check" onclick="checkRadio('q1', 'B', 'r1')">提交 Submit</button>
-            <span id="r1" class="result-mark"></span>
-        </div>
+</div>
 
-        <div class="question-box">
-            <p>2. 为什么富人和穷人都要过斋月？</p>
-            <p class="pinyin">Wèishénme fùrén hé qiónɡrén dōu yào ɡuò Zhāiyuè?</p>
-            <div class="options">
-                <label><input type="radio" name="q2" value="A"> A. 学习耐心和互相帮助 (Xuéxí nàixīn hé hùxiānɡ bānɡzhù)</label><br>
-                <label><input type="radio" name="q2" value="B"> B. 因为不想喝水 (Yīnwèi bù xiǎnɡ hē shuǐ)</label>
-            </div>
-            <button class="btn-check" onclick="checkRadio('q2', 'A', 'r2')">提交 Submit</button>
-            <span id="r2" class="result-mark"></span>
-        </div>
+<script>
+    function verify(boxId, correctVal) {
+        const box = document.getElementById(boxId);
+        const selected = box.querySelector('input[type="radio"]:checked');
+        const feedback = box.querySelector('.feedback');
 
-        <div class="question-box">
-            <p>3. 什么是 Iftar？</p>
-            <p class="pinyin">Shénme shì Iftar?</p>
-            <div class="options">
-                <label><input type="radio" name="q3" value="A"> A. 白天的水 (Báitiān de shuǐ)</label><br>
-                <label><input type="radio" name="q3" value="B"> B. 天黑以后的饭 (Tiān hēi yǐhòu de fàn)</label>
-            </div>
-            <button class="btn-check" onclick="checkRadio('q3', 'B', 'r3')">提交 Submit</button>
-            <span id="r3" class="result-mark"></span>
-        </div>
-
-        <div class="question-box">
-            <p>4. 斋月结束以后，孩子们开心吗？</p>
-            <p class="pinyin">Zhāiyuè jiéshù yǐhòu, háizimen kāixīn ma?</p>
-            <div class="options">
-                <label><input type="radio" name="q4" value="A"> A. 很开心，因为有糖果 (Hěn kāixīn, yīnwèi yǒu tánɡɡuǒ)</label><br>
-                <label><input type="radio" name="q4" value="B"> B. 不开心 (Bù kāixīn)</label>
-            </div>
-            <button class="btn-check" onclick="checkRadio('q4', 'A', 'r4')">提交 Submit</button>
-            <span id="r4" class="result-mark"></span>
-        </div>
-
-        <div class="question-box" style="border-top: 3px solid #3498db;">
-            <p>5. 开放式问题：在斋月，你会给穷人什么帮助？</p>
-            <p class="pinyin">Zài Zhāiyuè, nǐ huì ɡěi qiónɡrén shénme bānɡzhù?</p>
-            <p class="instruction-note">请写完后截频分享给老师。 (Please take a screenshot and share with teacher after writing.)</p>
-            <textarea placeholder="在此输入..."></textarea>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>第三部分：时间表达 (Telling Time)</h2>
-        <div class="example">
-            💡 说明：请使用 <b>“点”</b> 以及 <b>“一刻”、“半”、“三刻”</b> 来回答。<br>
-            Example: 10:30 &rarr; <b>十点半</b>
-        </div>
-
-        <div class="question-box">
-            <p>1. 请写出：<b>05:30</b></p>
-            <input type="text" id="time1">
-            <button class="btn-check" onclick="checkInput('time1', '五点半', 't1')">提交 Submit</button>
-            <span id="t1" class="result-mark"></span>
-        </div>
-
-        <div class="question-box">
-            <p>2. 请写出：<b>12:15</b></p>
-            <input type="text" id="time2">
-            <button class="btn-check" onclick="checkInput('time2', '十二点一刻', 't2')">提交 Submit</button>
-            <span id="t2" class="result-mark"></span>
-        </div>
-
-        <div class="question-box">
-            <p>3. 请写出：<b>06:45</b></p>
-            <input type="text" id="time3">
-            <button class="btn-check" onclick="checkInput('time3', '六点三刻', 't3')">提交 Submit</button>
-            <span id="t3" class="result-mark"></span>
-        </div>
-
-        <div class="question-box">
-            <p>4. 请写出：<b>03:30</b></p>
-            <input type="text" id="time4">
-            <button class="btn-check" onclick="checkInput('time4', '三点半', 't4')">提交 Submit</button>
-            <span id="t4" class="result-mark"></span>
-        </div>
-    </div>
-
-    <p style="text-align:center; color:#7f8c8d; margin-bottom: 50px;">完成后请截频发给老师 (Take a screenshot after finishing)</p>
-
-    <script>
-        function checkRadio(name, correct, resultId) {
-            const selected = document.querySelector(`input[name="${name}"]:checked`);
-            const res = document.getElementById(resultId);
-            if (selected && selected.value === correct) {
-                res.innerHTML = "😊";
-            } else {
-                res.innerHTML = "😢";
-            }
+        if (!selected) {
+            alert("Please choose an option first!");
+            return;
         }
 
-        function checkInput(id, correct, resultId) {
-            const val = document.getElementById(id).value.trim();
-            const res = document.getElementById(resultId);
-            if (val === correct) {
-                res.innerHTML = "😊";
-            } else {
-                res.innerHTML = "😢";
-            }
+        if (selected.value === correctVal) {
+            feedback.innerHTML = "😊";
+            feedback.style.color = "#00b894";
+        } else {
+            feedback.innerHTML = "💥";
+            feedback.style.color = "#e17055";
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
