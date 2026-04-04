@@ -2,212 +2,149 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Module 1: 时间表达标准化课件</title>
+    <title>Module 1: 看图说话场景练习 (互动增强版)</title>
     <style>
         :root {
             --bg-canvas: #f0f4f7;
             --primary-blue: #2c3e50;
             --accent-green: #16a085;
             --highlight-red: #e74c3c;
-            --cat1-bg: #e8f6f3;
-            --cat2-bg: #fef5e7;
-            --cat3-bg: #ebf5fb;
+            --card-white: #ffffff;
         }
         
-        body { font-family: 'PingFang SC', sans-serif; background: var(--bg-canvas); padding: 30px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: 'PingFang SC', sans-serif; background: var(--bg-canvas); padding: 40px; display: flex; flex-direction: column; align-items: center; }
 
-        /* 教学看板 */
-        .teaching-section { width: 1100px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
-        .rule-card { border-radius: 24px; padding: 25px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1); cursor: default; }
-        .rule-card:hover { transform: scale(1.05); z-index: 10; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .header-box { text-align: center; margin-bottom: 30px; }
+        .cn { font-size: 24px; font-weight: bold; color: var(--primary-blue); display: block; }
+        .py { font-size: 16px; color: #7f8c8d; display: block; }
+        .en { font-size: 12px; color: #95a5a6; display: block; font-style: italic; }
+
+        .period-bar { display: flex; gap: 10px; margin-bottom: 30px; }
+        .tag { background: white; padding: 8px 15px; border-radius: 12px; border: 1.5px solid var(--accent-green); text-align: center; }
+
+        .routine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 1050px; }
         
-        .card-1 { background: var(--cat1-bg); border-top: 6px solid var(--accent-green); }
-        .card-2 { background: var(--cat2-bg); border-top: 6px solid #f39c12; }
-        .card-3 { background: var(--cat3-bg); border-top: 6px solid #3498db; }
+        .scene-card { 
+            background: var(--card-white); border-radius: 20px; padding: 20px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05); transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            border: 2px solid transparent;
+        }
+        .scene-card:hover { border-color: var(--accent-green); transform: translateY(-5px); }
 
-        .title-cn { font-size: 20px; font-weight: bold; margin-bottom: 15px; display: block; border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 8px; }
+        .icon-circle { width: 70px; height: 70px; background: #f8f9fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 10px; }
+        .time-box { font-family: 'Courier New', monospace; font-size: 28px; font-weight: bold; color: var(--highlight-red); background: #fff5f5; padding: 5px 15px; border-radius: 10px; margin: 10px 0; }
 
-        /* 公式样式 (中文、拼音、英文) */
-        .formula-group { background: rgba(255,255,255,0.5); padding: 12px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed rgba(0,0,0,0.1); }
-        .fm-cn { font-size: 16px; font-weight: bold; color: var(--primary-blue); display: block; }
-        .fm-py { font-size: 13px; color: #7f8c8d; display: block; }
-        .fm-en { font-size: 11px; color: #95a5a6; display: block; font-style: italic; text-transform: uppercase; }
-
-        /* 举例组样式 */
-        .example-group { margin-bottom: 18px; padding-left: 5px; }
-        .ex-num { font-size: 22px; font-weight: 900; color: var(--highlight-red); display: block; }
-        .ex-cn { font-size: 18px; font-weight: bold; color: var(--primary-blue); display: block; margin-top: 2px; }
-        .ex-py { font-size: 14px; color: #7f8c8d; display: block; margin-top: 1px; }
-
-        /* 练习区及钟表样式 */
-        .practice-area { width: 1000px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .quiz-box { background: white; border-radius: 25px; padding: 30px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .clock-wrapper { position: relative; width: 200px; height: 200px; margin: 0 auto 20px; border: 8px solid var(--primary-blue); border-radius: 50%; background: white; cursor: pointer; }
-        .num-label { position: absolute; font-size: 14px; font-weight: bold; color: var(--primary-blue); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
-        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 10px; transition: 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
-        .hour-h { width: 6px; height: 50px; background: var(--primary-blue); margin-left: -3px; z-index: 2; }
-        .min-h { width: 4px; height: 75px; background: var(--accent-green); margin-left: -2px; z-index: 3; }
-        .digi-screen { background: #2c3e50; color: #32ff7e; font-family: 'Courier New', monospace; font-size: 45px; padding: 15px 25px; border-radius: 12px; display: inline-block; margin: 15px 0; border: 3px solid #1a252f; }
-        .btn-action { background: var(--accent-green); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .ans-area { min-height: 85px; margin-top: 20px; padding: 15px; border-radius: 15px; background: #f1f3f5; display: flex; flex-direction: column; justify-content: center; position: relative; border: 1px solid #e9ecef; }
-        .blur-ans { filter: blur(8px); transition: filter 0.3s ease; user-select: none; }
+        .ans-area { margin-top: 10px; width: 100%; background: #f9f9f9; padding: 12px; border-radius: 10px; min-height: 60px; }
+        .blur-ans { filter: blur(6px); transition: 0.3s; cursor: pointer; }
         .ans-area:hover .blur-ans { filter: blur(0); }
-        .no-blur { filter: blur(0) !important; }
+
+        .btn-refresh { 
+            margin-top: 30px; background: var(--primary-blue); color: white; border: none; 
+            padding: 15px 45px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+        }
+        .btn-refresh:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
-    <div class="teaching-section">
-        <div class="rule-card card-1">
-            <span class="title-cn">1. 基础结构 (Basic Structure)</span>
-            <div class="formula-group">
-                <span class="fm-cn">数字 + 点 + 数字 + 分</span>
-                <span class="fm-py">shùzì + diǎn + shùzì + fēn</span>
-                <span class="fm-en">Hour + diǎn + Minute + fēn</span>
-            </div>
-            <div class="example-group">
-                <span class="ex-num">9:23</span>
-                <span class="ex-cn">九点二十三分</span>
-                <span class="ex-py">jiǔ diǎn èrshísān fēn</span>
-            </div>
-            <div class="example-group">
-                <span class="ex-num">2:00</span>
-                <span class="ex-cn">两点</span>
-                <span class="ex-py">liǎng diǎn (⚠️ Not 二点)</span>
-            </div>
-        </div>
-
-        <div class="rule-card card-2">
-            <span class="title-cn">2. 零的用法 (The "0" Rule)</span>
-            <div class="formula-group">
-                <span class="fm-cn">1-9分钟：点 + 零 + 分</span>
-                <span class="fm-py">diǎn + líng + fēn</span>
-                <span class="fm-en">Hour + diǎn + líng + Minute + fēn</span>
-            </div>
-            <div class="example-group">
-                <span class="ex-num">10:05</span>
-                <span class="ex-cn">十点零五分</span>
-                <span class="ex-py">shí diǎn líng wǔ fēn</span>
-            </div>
-        </div>
-
-        <div class="rule-card card-3">
-            <span class="title-cn">3. 常用简称 (Shortcuts)</span>
-            <div class="formula-group">
-                <span class="fm-cn">15分=一刻 | 30分=半 | 45分=三刻</span>
-                <span class="fm-py">yí kè | bàn | sān kè</span>
-                <span class="fm-en">15m | 30m | 45m</span>
-            </div>
-            <div class="example-group">
-                <span class="ex-num">3:15</span>
-                <span class="ex-cn">三点一刻</span>
-                <span class="ex-py">sān diǎn yí kè</span>
-            </div>
-            <div class="example-group">
-                <span class="ex-num">2:30</span>
-                <span class="ex-cn">两点半</span>
-                <span class="ex-py">liǎng diǎn bàn</span>
-            </div>
-            <div class="example-group">
-                <span class="ex-num">8:45</span>
-                <span class="ex-cn">八点三刻</span>
-                <span class="ex-py">bā diǎn sān kè</span>
-            </div>
-        </div>
+    <div class="header-box">
+        <span class="cn">🖼️ 看图说话：我的生活场景</span>
+        <span class="py">Kàn tú shuōhuà: Shēnghuó chǎngjǐng</span>
+        <span class="en">Look and Describe: My Daily Routine</span>
     </div>
 
-    <div class="practice-area">
-        <div class="quiz-box">
-            <span class="ex-cn">🕒 动态识时练习</span>
-            <div class="clock-wrapper" id="masterClock" onclick="stepClock()">
-                <div id="clockNumbers"></div>
-                <div class="hand hour-h" id="h-ptr"></div>
-                <div class="hand min-h" id="m-ptr"></div>
-            </div>
-            <button class="btn-action" onclick="randomClock()">🎲 随机出题</button>
-            <div class="ans-area">
-                <div id="clock-content" class="no-blur">
-                    <span class="ex-cn" id="clock-cn" style="font-size: 26px;">十二点</span>
-                    <span class="ex-py" id="clock-py" style="color: var(--accent-green);">shí'èr diǎn</span>
-                </div>
-            </div>
+    <div class="period-bar">
+        <div class="tag"><span class="cn" style="font-size:14px">早上</span><span class="en">Early AM</span></div>
+        <div class="tag"><span class="cn" style="font-size:14px">上午</span><span class="en">Late AM</span></div>
+        <div class="tag"><span class="cn" style="font-size:14px">下午</span><span class="en">PM</span></div>
+        <div class="tag"><span class="cn" style="font-size:14px">晚上</span><span class="en">Evening</span></div>
+    </div>
+
+    <div class="routine-grid" id="mainGrid">
         </div>
 
-        <div class="quiz-box">
-            <span class="ex-cn">📟 电子钟全汉字转译</span>
-            <div class="digi-screen" id="digi-text">12:57</div><br>
-            <button class="btn-action" onclick="randomDigi()">🎲 随机出题</button>
-            <div class="ans-area">
-                <div id="digi-content" class="blur-ans">
-                    <span class="ex-cn" id="digi-cn">十二点五十七分</span>
-                    <span class="ex-py" id="digi-py">shí'èr diǎn wǔshíqī fēn</span>
-                </div>
-            </div>
-        </div>
-    </div>
+    <button class="btn-refresh" onclick="renderScenes()">🎲 随机生成 (Randomize)</button>
 
     <script>
-        const numContainer = document.getElementById('clockNumbers');
-        for (let i = 1; i <= 12; i++) {
-            const label = document.createElement('div');
-            label.className = 'num-label';
-            const angle = i * 30 * (Math.PI / 180);
-            label.style.left = (100 + 75 * Math.sin(angle) - 10) + 'px';
-            label.style.top = (100 - 75 * Math.cos(angle) - 10) + 'px';
-            label.innerText = i;
-            numContainer.appendChild(label);
-        }
+        const actions = [
+            { icon: "🍳", cn: "做早餐", py: "zuò zǎocān", en: "Make Breakfast", period: "早上" },
+            { icon: "💼", cn: "去公司", py: "qù gōngsī", en: "Go to Company", period: "早上" },
+            { icon: "📝", cn: "开会", py: "kāihuì", en: "Have a Meeting", period: "上午" },
+            { icon: "🍜", cn: "吃午饭", py: "chī wǔfàn", en: "Have Lunch", period: "上午" },
+            { icon: "☕", cn: "喝咖啡", py: "hē kāfēi", en: "Drink Coffee", period: "下午" },
+            { icon: "🏋️", cn: "运动", py: "yùndòng", en: "Do Sports", period: "下午" },
+            { icon: "🎬", cn: "看电影", py: "kàn diànyǐng", en: "Watch a Movie", period: "晚上" },
+            { icon: "📖", cn: "看书", py: "kànshū", en: "Read a Book", period: "晚上" },
+            { icon: "🛏️", cn: "睡觉", py: "shuìjiào", en: "Go to Sleep", period: "晚上" }
+        ];
 
-        function numToCn(num, isHour = false) {
-            if (num === 2 && isHour) return "两";
-            if (num === 0) return "";
-            const units = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
-            if (num <= 10) return units[num];
-            if (num < 20) return "十" + units[num % 10];
-            if (num % 10 === 0) return units[Math.floor(num / 10)] + "十";
-            return units[Math.floor(num / 10)] + "十" + units[num % 10];
-        }
+        const cnNums = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
 
-        function numToPy(num, isHour = false) {
-            if (num === 2 && isHour) return "liǎng";
-            const pys = ["", "yī", "èr", "sān", "sì", "wǔ", "liù", "qī", "bā", "jiǔ", "shí"];
-            if (num <= 10) return pys[num];
-            if (num < 20) return "shí" + pys[num % 10];
-            if (num % 10 === 0) return pys[Math.floor(num / 10)] + "shí";
-            return pys[Math.floor(num / 10)] + "shí" + pys[num % 10];
-        }
-
-        let h = 12, m = 0;
-        function stepClock() { m = (m + 15) % 60; if(m === 0) h = (h % 12) + 1; updateUI('clock', h, m, true); }
-        function randomClock() { h = Math.floor(Math.random() * 12) + 1; m = Math.floor(Math.random() * 4) * 15; updateUI('clock', h, m, false); }
-        function randomDigi() { 
-            const rh = Math.floor(Math.random() * 12) + 1; 
-            const rm = Math.floor(Math.random() * 60); 
-            document.getElementById('digi-text').innerText = `${rh<10?'0'+rh:rh}:${rm<10?'0'+rm:rm}`; 
-            updateUI('digi', rh, rm, false); 
-        }
-
-        function updateUI(type, vH, vM, isStep) {
-            let mStr = "", mPy = "";
-            if (vM === 0) { mStr = ""; mPy = ""; }
-            else if (vM === 15) { mStr = "一刻"; mPy = "yí kè"; }
-            else if (vM === 30) { mStr = "半"; mPy = "bàn"; }
-            else if (vM === 45) { mStr = "三刻"; mPy = "sān kè"; }
-            else if (vM < 10) { mStr = "零" + numToCn(vM) + "分"; mPy = "líng " + numToPy(vM) + " fēn"; }
-            else { mStr = numToCn(vM) + "分"; mPy = numToPy(vM) + " fēn"; }
-
-            if(type === 'clock') {
-                document.getElementById('m-ptr').style.transform = `rotate(${vM * 6}deg)`;
-                document.getElementById('h-ptr').style.transform = `rotate(${vH * 30 + vM * 0.5}deg)`;
-                document.getElementById('clock-cn').innerText = numToCn(vH, true) + "点" + mStr;
-                document.getElementById('clock-py').innerText = numToPy(vH, true) + " diǎn " + mPy;
-                document.getElementById('clock-content').className = isStep ? 'no-blur' : 'blur-ans';
-            } else {
-                document.getElementById('digi-cn').innerText = numToCn(vH, true) + "点" + mStr;
-                document.getElementById('digi-py').innerText = numToPy(vH, true) + " diǎn " + mPy;
-                document.getElementById('digi-content').className = 'blur-ans';
+        function getCnTime(h, m) {
+            let hStr = h === 2 ? "两" : (h <= 10 ? cnNums[h] : "十" + (h % 10 === 0 ? "" : cnNums[h % 10]));
+            let mStr = "";
+            if (m === 0) mStr = "";
+            else if (m === 15) mStr = "一刻";
+            else if (m === 30) mStr = "半";
+            else if (m === 45) mStr = "三刻";
+            else if (m < 10) mStr = "零" + cnNums[m] + "分";
+            else {
+                let ten = Math.floor(m / 10);
+                let unit = m % 10;
+                mStr = (ten === 1 ? "十" : cnNums[ten] + "十") + (unit === 0 ? "" : cnNums[unit]) + "分";
             }
+            return hStr + "点" + mStr;
         }
+
+        function renderScenes() {
+            const grid = document.getElementById('mainGrid');
+            grid.innerHTML = ''; // 清空
+            
+            // 随机抽取 6 个不重复的动作
+            const shuffled = [...actions].sort(() => 0.5 - Math.random()).slice(0, 6);
+
+            shuffled.forEach(item => {
+                // 根据时段随机生成小时
+                let h;
+                if (item.period === "早上") h = Math.floor(Math.random() * 3) + 6; // 6-8
+                else if (item.period === "上午") h = Math.floor(Math.random() * 3) + 9; // 9-11
+                else if (item.period === "下午") h = Math.floor(Math.random() * 5) + 13; // 13-17
+                else h = Math.floor(Math.random() * 4) + 19; // 19-22
+
+                // 随机分钟 (0, 15, 30, 45 或 随机数字)
+                const mOptions = [0, 15, 30, 45, Math.floor(Math.random() * 59)];
+                const m = mOptions[Math.floor(Math.random() * mOptions.length)];
+                
+                // 转换 24 小时制显示为 12 小时制口语
+                const displayH = h > 12 ? h - 12 : h;
+                const timeString = `${h < 10 ? '0' + h : h}:${m < 10 ? '0' + m : m}`;
+                const fullCn = `我${item.period}${getCnTime(displayH, m)}${item.cn}。`;
+
+                const card = document.createElement('div');
+                card.className = 'scene-card';
+                card.innerHTML = `
+                    <div class="icon-circle">${item.icon}</div>
+                    <div style="margin-bottom:10px">
+                        <span class="cn">${item.cn}</span>
+                        <span class="py">${item.py}</span>
+                        <span class="en">${item.en}</span>
+                    </div>
+                    <div class="time-box">${timeString}</div>
+                    <div class="ans-area">
+                        <div class="blur-ans">
+                            <span class="cn" style="font-size:16px">${fullCn}</span>
+                            <span class="en" style="font-size:10px; margin-top:5px">I ${item.en} at ${timeString} in the ${item.period === '晚上' ? 'evening' : item.period.toLowerCase()}.</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 页面加载时运行一次
+        window.onload = renderScenes;
     </script>
 </body>
 </html>
