@@ -1,1 +1,199 @@
-Hi Gardjola
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HSK 2 互动题库 - 进阶约束版</title>
+    <style>
+        :root { --primary: #f28d35; --success: #27ae60; --error: #e74c3c; --bg: #fdfaf7; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); padding: 20px; color: #333; }
+        
+        /* 拼音控制 */
+        .pinyin { font-size: 0.8em; color: #888; display: block; transition: 0.3s; }
+        .hide-py .pinyin { display: none !important; }
+        
+        .main-container { max-width: 850px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header-controls { margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px; text-align: center; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+        .btn-main.off { background: #ccc; }
+
+        .section-box { margin-bottom: 40px; text-align: left; background: #fff; border: 1px solid #f0f0f0; padding: 25px; border-radius: 15px; position: relative; }
+        .section-title { color: var(--primary); border-left: 5px solid var(--primary); padding-left: 10px; margin-bottom: 20px; }
+        .btn-shuffle { background: #2c3e50; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; float: right; font-size: 12px; }
+
+        .item-btn { 
+            display: inline-flex; flex-direction: column; align-items: center;
+            padding: 8px 15px; margin: 5px; border: 1px solid #ddd; border-radius: 10px; 
+            background: white; cursor: pointer; transition: 0.2s; 
+        }
+        .item-btn:hover { border-color: var(--primary); background: #fff9f4; }
+        .item-text { font-size: 1.1em; font-weight: bold; }
+
+        .blank-space { display: inline-block; min-width: 70px; border-bottom: 2px solid #333; text-align: center; color: var(--primary); font-weight: bold; margin: 0 5px; }
+        .status-icon { font-size: 22px; vertical-align: middle; }
+
+        /* 第二关 */
+        .drop-zone { min-height: 60px; border: 2px dashed #ccc; margin: 15px 0; padding: 15px; border-radius: 12px; background: #fafafa; font-size: 1.2em; line-height: 1.8; }
+        
+        /* 第三关特有样式 */
+        .must-include { background: #fff4e6; border: 1px dashed var(--primary); padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 14px; }
+        .keyword-tag { color: #d35400; font-weight: bold; text-decoration: underline; }
+        .output-box { width: 100%; height: 80px; margin-top: 10px; border: 1px solid #ddd; border-radius: 10px; padding: 12px; font-size: 1em; box-sizing: border-box; }
+        .tip-en { font-size: 12px; color: #666; margin-top: 8px; border-top: 1px solid #eee; padding-top: 8px; }
+
+        .btn-action { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-size: 13px; margin-right: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="header-controls">
+            <p style="font-size:14px; color:#666; margin-bottom:10px;">Master your vocabulary with or without Pinyin hints:</p>
+            <button id="pyBtn" class="btn-main" onclick="togglePy()">Pinyin: ON</button>
+        </div>
+
+        <div class="section-box">
+            <button class="btn-shuffle" onclick="renderL1()">Shuffle 换一批</button>
+            <h3 class="section-title">Level 1: 选词填空 (Fill in the blanks)</h3>
+            <div id="l1-container"></div>
+        </div>
+
+        <div class="section-box">
+            <button class="btn-shuffle" onclick="renderL2()">Shuffle 换一批</button>
+            <h3 class="section-title">Level 2: 连词成句 (Sentence Builder)</h3>
+            <div id="l2-container"></div>
+        </div>
+
+        <div class="section-box">
+            <button class="btn-shuffle" onclick="renderL3()">Shuffle 换一批</button>
+            <h3 class="section-title">Level 3: 想法表达 (Express Yourself)</h3>
+            <div id="l3-container"></div>
+        </div>
+    </div>
+
+<script>
+    const pyMap = {
+        "自己": "zìjǐ", "一起": "yìqǐ", "洗": "xǐ", "拿": "ná", "回来": "huílái", "出去": "chūqù", 
+        "完": "wán", "这么": "zhème", "不错": "búcuò", "不好": "bùhǎo", "手": "shǒu", "工作": "gōngzuò",
+        "打算": "dǎsuàn", "几点": "jǐdiǎn", "你": "nǐ", "？": "", "。": "", "帮我": "bāng wǒ", 
+        "一下": "yíxià", "手机": "shǒujī", "好吗": "hǎo ma", "她的": "tā de", "汉语": "Hànyǔ", 
+        "很": "hěn", "这么多": "zhème duō", "我": "wǒ", "一个人": "yígèrén", "做不完": "zuò bù wán",
+        "为什么要": "wèishéme yào", "玩": "wán", "去": "qù", "旅游": "lǚyóu", "吧": "ba", "西安": "Xī'ān",
+        "吃饭": "chīfàn", "前": "qián", "先": "xiān", "洗手": "xǐshǒu", "这件事": "zhè jiàn shì",
+        "做": "zuò", "拿在": "ná zài", "手里": "shǒulǐ", "的是": "de shì", "什么": "shénme", "这里": "zhèlǐ", "东西": "dōngxi", "好吃": "hǎochī",
+        "拿出来": "ná chūlái", "做完": "zuòwán"
+    };
+
+    const l1Data = [
+        { q: "我打算 <span class='blank-space'></span> 一个人去超市。", py: "wǒ dǎsuàn ... yígèrén qù chāoshì", opts: ["自己", "一起"], ans: "自己" },
+        { q: "还没 <span class='blank-space'></span> 手，你不可以吃东西。", py: "háiméi ... shǒu, nǐ bù kěyǐ chī dōngxi", opts: ["洗", "拿"], ans: "洗" },
+        { q: "帮我把包里的电脑 <span class='blank-space'></span> 出来。", py: "bāng wǒ bǎ bāo lǐ de diànnǎo ... chūlái", opts: ["拿", "洗"], ans: "拿" },
+        { q: "为什么你买了 <span class='blank-space'></span> 多水果？", py: "wèishéme nǐ mǎile ... duō shuǐguǒ", opts: ["这么", "不错"], ans: "这么" }
+    ];
+
+    const l2Data = [
+        { ans: "你打算几点回来？", words: ["你", "打算", "几点", "回来", "？"] },
+        { ans: "帮我拿一下手机好吗？", words: ["帮我", "拿", "一下", "手机", "好吗", "？"] },
+        { ans: "她的汉语很不错。", words: ["她的", "汉语", "很", "不错", "。"] },
+        { ans: "这么多工作我一个人做不完。", words: ["这么多", "工作", "我", "一个人", "做不完", "。"] }
+    ];
+
+    const l3Data = [
+        { q: "你为什么不喜欢喝咖啡？", py: "Nǐ wèishéme bù xǐhuan hē kāfēi?", key: "这么" },
+        { q: "这么多衣服，你能洗完吗？", py: "Zhème duō yīfu, nǐ néng xǐwán ma?", key: "自己" },
+        { q: "你手里拿的是什么？", py: "Nǐ shǒulǐ ná de shì shénme?", key: "拿出来" },
+        { q: "这么晚了，你为什么要出去？", py: "Zhème wǎn le, nǐ wèishéme yào chūqù?", key: "回来" },
+        { q: "你觉得这家饭馆怎么样？", py: "Nǐ juéde zhè jiā fànguǎn zěnmeyàng?", key: "不错" },
+        { q: "为什么你不和我们一起去玩？", py: "Wèishéme nǐ bù hé wǒmen yìqǐ qù wán?", key: "完" },
+        { q: "我们怎么去火车站？", py: "Wǒmen zěnme qù huǒchēzhàn?", key: "一起" },
+        { q: "你打算什么时候回来？", py: "Nǐ dǎsuàn shénme shíhou huílái?", key: "做完" },
+        { q: "为什么你这么累？", py: "Wèishéme nǐ zhème lèi?", key: "这么" },
+        { q: "你要自己去西安旅游吗？", py: "Nǐ yào zìjǐ qù Xī'ān lǚyóu ma?", key: "一起" }
+    ];
+
+    function togglePy() {
+        document.body.classList.toggle('hide-py');
+        const btn = document.getElementById('pyBtn');
+        const isOn = !document.body.classList.contains('hide-py');
+        btn.innerText = isOn ? "Pinyin: ON" : "Pinyin: OFF";
+        btn.className = isOn ? "btn-main" : "btn-main off";
+    }
+
+    function renderL1() {
+        const shuffled = [...l1Data].sort(() => 0.5 - Math.random()).slice(0, 2);
+        let html = '';
+        shuffled.forEach((item, i) => {
+            html += `<div style='margin-bottom:25px'>
+                <p><span class='pinyin'>${item.py}</span>${item.q} <span id='ic1-${i}' class='status-icon'></span></p>`;
+            item.opts.forEach(opt => {
+                html += `<button class='item-btn' onclick="checkL1(this, '${opt}', '${item.ans}', 'ic1-${i}')">
+                            <span class='pinyin'>${pyMap[opt]||''}</span>
+                            <span class='item-text'>${opt}</span>
+                         </button>`;
+            });
+            html += `</div>`;
+        });
+        document.getElementById('l1-container').innerHTML = html;
+    }
+
+    function checkL1(btn, choice, ans, iconId) {
+        const parent = btn.parentElement;
+        parent.querySelector('.blank-space').innerText = choice;
+        document.getElementById(iconId).innerText = (choice === ans) ? "✅ 😄" : "❌ 😭";
+    }
+
+    function renderL2() {
+        const shuffled = [...l2Data].sort(() => 0.5 - Math.random()).slice(0, 2);
+        let html = '';
+        shuffled.forEach((item, i) => {
+            html += `<div style='margin-bottom:30px'>
+                <div class='drop-zone' id='dz-${i}'></div>
+                <div id='words-${i}'>`;
+            [...item.words].sort(() => 0.5 - Math.random()).forEach(w => {
+                html += `<button class='item-btn' onclick="addToSent(${i}, '${w}')">
+                            <span class='pinyin'>${pyMap[w]||''}</span>
+                            <span class='item-text'>${w}</span>
+                         </button>`;
+            });
+            html += `</div>
+                <button class='btn-action' onclick="clearL2(${i})">Reset</button>
+                <button class='btn-action' onclick="checkL2(${i}, '${item.ans}')">Check Answer</button>
+                <span id='ic2-${i}' class='status-icon'></span>
+            </div>`;
+        });
+        document.getElementById('l2-container').innerHTML = html;
+    }
+
+    function addToSent(idx, word) { document.getElementById(`dz-${idx}`).innerText += word; }
+    function clearL2(idx) { document.getElementById(`dz-${idx}`).innerText = ""; document.getElementById(`ic2-${idx}`).innerText="";}
+    function checkL2(idx, ans) {
+        const user = document.getElementById(`dz-${idx}`).innerText;
+        document.getElementById(`ic2-${idx}`).innerText = (user === ans) ? "✅ 😄" : "❌ 😭";
+    }
+
+    function renderL3() {
+        const shuffled = [...l3Data].sort(() => 0.5 - Math.random()).slice(0, 2);
+        let html = '';
+        shuffled.forEach((item, i) => {
+            html += `<div style='margin-bottom:25px'>
+                <p><span class='pinyin'>${item.py}</span><strong>Q:</strong> ${item.q}</p>
+                <div class='must-include'>
+                    💡 <strong>Your answer must include:</strong> 
+                    <span class='keyword-tag'>
+                        <span class='pinyin'>${pyMap[item.key]||''}</span>
+                        ${item.key}
+                    </span>
+                </div>
+                <textarea class='output-box' placeholder='Write your answer here...'></textarea>
+                <div class='tip-en'>
+                    Take a screenshot or record a voice note for your teacher! 🎤 <br>
+                    Upload files to our shared <strong>Google Drive</strong> folder.
+                </div>
+            </div>`;
+        });
+        document.getElementById('l3-container').innerHTML = html;
+    }
+
+    renderL1(); renderL2(); renderL3();
+</script>
+</body>
+</html>
