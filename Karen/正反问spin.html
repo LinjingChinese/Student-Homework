@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK1 正反问 - Spin & Speak</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; }
+
+.container { max-width: 500px; margin: 0 auto; }
+
+/* Header */
+.header { background: rgba(255,255,255,0.95); border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.header span { font-size: 14px; font-weight: 600; color: #555; }
+.header .score { color: #f59e0b; }
+.header .level { color: #667eea; }
+.header .qnum { color: #10b981; }
+
+/* Reset btn */
+.reset-btn { background: #ef4444; color: white; border: none; border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.reset-btn:hover { background: #dc2626; }
+
+/* Start screen */
+.start-screen { background: white; border-radius: 20px; padding: 40px 24px; text-align: center; margin-top: 60px; }
+.start-screen h1 { font-size: 28px; color: #333; margin-bottom: 8px; }
+.start-screen .subtitle { font-size: 16px; color: #888; margin-bottom: 30px; }
+.start-screen .start-btn { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 50px; padding: 18px 50px; font-size: 22px; font-weight: bold; cursor: pointer; }
+
+/* Wheel */
+.wheel-container { background: white; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 12px; }
+.wheel { width: 340px; height: 340px; margin: 0 auto 20px; position: relative; }
+.wheel canvas { width: 100%; height: 100%; transition: transform 4s cubic-bezier(0.25, 0.1, 0.05, 1); }
+.wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent; border-top: 28px solid #ef4444; z-index: 10; }
+.wheel-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; cursor: pointer; z-index: 5; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: 3px solid white; }
+
+.spin-btn { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 50px; padding: 14px 40px; font-size: 18px; font-weight: bold; cursor: pointer; }
+.spin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Question area */
+.q-area { background: white; border-radius: 20px; padding: 24px; text-align: center; }
+.q-area .emoji { font-size: 72px; margin-bottom: 12px; cursor: pointer; transition: transform 0.2s; display: inline-block; }
+.q-area .emoji:hover { transform: scale(1.1); }
+.q-area .pinyin-label { font-size: 18px; color: #667eea; font-weight: 600; margin-bottom: 8px; }
+.q-area .try-text { font-size: 15px; color: #555; margin: 12px 0 6px; font-style: italic; }
+.q-area .english-hint { font-size: 14px; color: #999; background: #f3f4f6; border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; line-height: 1.5; }
+
+/* Answer popup */
+.answer-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+.answer-popup.show { display: flex; }
+.answer-box { background: white; border-radius: 20px; padding: 28px 24px; max-width: 420px; width: 100%; text-align: center; }
+.answer-box h3 { font-size: 18px; color: #333; margin-bottom: 16px; }
+.answer-box .ruby-line { font-size: 22px; margin: 10px 0; line-height: 1.5; }
+ruby { ruby-align: center; }
+rt { font-size: 12px; color: #667eea; font-weight: 500; }
+
+/* Play audio button */
+.play-btn { background: #667eea; color: white; border: none; border-radius: 50px; padding: 10px 24px; font-size: 15px; font-weight: 600; cursor: pointer; margin: 14px auto 0; display: inline-flex; align-items: center; gap: 6px; }
+.play-btn:hover { background: #5568d3; }
+
+.answer-box .btn-row { display: flex; gap: 12px; margin-top: 20px; }
+.btn-yes { flex: 1; background: #10b981; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 600; cursor: pointer; }
+.btn-no { flex: 1; background: #ef4444; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 600; cursor: pointer; }
+
+/* Level complete */
+.level-complete { background: white; border-radius: 20px; padding: 40px 24px; text-align: center; }
+.level-complete h2 { font-size: 26px; color: #333; margin-bottom: 12px; }
+.level-complete .stars { font-size: 48px; margin: 16px 0; }
+.level-complete p { font-size: 16px; color: #666; margin-bottom: 24px; }
+.level-complete .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-purple { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 12px; padding: 14px 28px; font-size: 16px; font-weight: 600; cursor: pointer; }
+.btn-gray { background: #e5e7eb; color: #333; border: none; border-radius: 12px; padding: 14px 28px; font-size: 16px; font-weight: 600; cursor: pointer; }
+
+/* End screen */
+.end-screen { background: white; border-radius: 20px; padding: 40px 24px; text-align: center; margin-top: 40px; }
+.end-screen h1 { font-size: 28px; color: #333; margin-bottom: 12px; }
+.end-screen .final-score { font-size: 56px; font-weight: bold; color: #f59e0b; margin: 16px 0; }
+.end-screen .trophy { font-size: 64px; margin-bottom: 12px; }
+
+/* Confirm modal */
+.confirm-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+.confirm-modal.show { display: flex; }
+.confirm-box { background: white; border-radius: 16px; padding: 28px 24px; max-width: 340px; width: 100%; text-align: center; }
+.confirm-box p { font-size: 16px; color: #333; margin-bottom: 20px; }
+.confirm-box .btn-row { display: flex; gap: 12px; }
+.confirm-box button { flex: 1; border: none; border-radius: 10px; padding: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.btn-confirm-yes { background: #ef4444; color: white; }
+.btn-confirm-no { background: #e5e7eb; color: #333; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header" id="header" style="display:none;">
+    <span class="score" id="scoreDisplay">⭐ 0</span>
+    <span class="level" id="levelDisplay">🏆 Level 1</span>
+    <span class="qnum" id="qnumDisplay">🎯 1/5</span>
+    <button class="reset-btn" onclick="askReset()">Reset</button>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="trophy" style="font-size:56px;">🎡</div>
+    <h1>Spin & Speak</h1>
+    <p class="subtitle">HSK1 正反问 A-not-A Practice</p>
+    <p style="font-size:14px;color:#888;margin-bottom:24px;">Spin the wheel → Ask a question → Click the picture to check!</p>
+    <button class="start-btn" onclick="startGame()">START</button>
+  </div>
+
+  <!-- Wheel Screen -->
+  <div class="wheel-container" id="wheelScreen" style="display:none;">
+    <div class="wheel">
+      <div class="wheel-pointer"></div>
+      <canvas id="wheelCanvas" width="500" height="500"></canvas>
+      <div class="wheel-center" onclick="spinWheel()">SPIN</div>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spinWheel()" style="display:none;">SPIN AGAIN</button>
+  </div>
+
+  <!-- Question Area -->
+  <div class="q-area" id="qArea" style="display:none;">
+    <div class="emoji" id="qEmoji" onclick="showAnswer()"></div>
+    <div class="pinyin-label" id="qLabel"></div>
+    <p class="try-text">👇 Try to ask:</p>
+    <p class="english-hint" id="englishHint"></p>
+    <p style="font-size:12px;color:#bbb;margin-top:16px;">(Click the picture to check your answer)</p>
+  </div>
+
+  <!-- Level Complete -->
+  <div class="level-complete" id="levelComplete" style="display:none;">
+    <h2 id="levelCompleteTitle">Level Complete!</h2>
+    <div class="stars" id="levelStars"></div>
+    <p id="levelCompleteText"></p>
+    <div class="btn-group">
+      <button class="btn-purple" onclick="nextLevel()">Next Level →</button>
+      <button class="btn-gray" onclick="backToHome()">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- End Screen -->
+  <div class="end-screen" id="endScreen" style="display:none;">
+    <div class="trophy">🏆</div>
+    <h1>Well Done!</h1>
+    <p style="font-size:16px;color:#888;">You finished all 5 levels!</p>
+    <div class="final-score" id="finalScore">0</div>
+    <p style="font-size:14px;color:#888;margin-bottom:24px;">Total Points</p>
+    <div class="btn-group">
+      <button class="btn-purple" onclick="startGame()">Play Again</button>
+      <button class="btn-gray" onclick="backToHome()">Home</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Answer Popup -->
+<div class="answer-popup" id="answerPopup">
+  <div class="answer-box">
+    <h3>✅ Reference Question</h3>
+    <div id="answerContent"></div>
+    <button class="play-btn" id="playBtn" onclick="playAudio()">🔊 Play</button>
+    <div class="btn-row">
+      <button class="btn-no" onclick="answerNo()">Not yet 😅</button>
+      <button class="btn-yes" onclick="answerYes()">I said it! ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Reset Modal -->
+<div class="confirm-modal" id="confirmModal">
+  <div class="confirm-box">
+    <p>Reset the game?<br>All progress will be lost.</p>
+    <div class="btn-row">
+      <button class="btn-confirm-no" onclick="cancelReset()">Cancel</button>
+      <button class="btn-confirm-yes" onclick="confirmReset()">Yes, Reset</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const items = [
+  { emoji:"🍎", label:"苹果", py:"píng guǒ", en:"Ask: Is this apple big?", q:"这个苹果大不大？" },
+  { emoji:"🍚", label:"米饭", py:"mǐ fàn", en:"Ask: Do you eat rice?", q:"你吃不吃米饭？" },
+  { emoji:"🇨🇳", label:"中国", py:"zhōng guó", icon:"中国", en:"Ask: Are you from China? / Are you Chinese?", q:"你是不是中国人？" },
+  { emoji:"👩‍🎓", label:"大学生", py:"dà xué shēng", en:"Ask: Are you a university student?", q:"你是不是大学生？" },
+  { emoji:"📱", label:"手机", py:"shǒu jī", en:"Ask: Is this phone expensive?", q:"这个手机贵不贵？" },
+  { emoji:"🏫", label:"学校", py:"xué xiào", en:"Ask: Do you go to school?", q:"你去不去学校？" },
+  { emoji:"☕", label:"咖啡", py:"kā fēi", en:"Ask: Do you drink coffee?", q:"你喝不喝咖啡？" },
+  { emoji:"🎒", label:"书包", py:"shū bāo", en:"Ask: Is the bag heavy?", q:"这个书包重不重？" },
+  { emoji:"👕", label:"衣服", py:"yī fú", en:"Ask: Is this clothes good-looking?", q:"这件衣服好不好看？" },
+  { emoji:"🏠", label:"房子", py:"fáng zi", en:"Ask: Is the house big?", q:"这个房子大不大？" },
+  { emoji:"🤝", label:"朋友", py:"péng yǒu", en:"Ask: Do you have friends?", q:"你有没有朋友？" },
+  { emoji:"🌶️", label:"辣椒", py:"là jiāo", en:"Ask: Is it spicy?", q:"这个辣椒辣不辣？" },
+  { emoji:"🍌", label:"香蕉", py:"xiāng jiāo", en:"Ask: Is this banana long?", q:"这根香蕉长不长？" },
+  { emoji:"⚽", label:"踢足球", py:"tī zú qiú", en:"Ask: Do you like playing football?", q:"你喜欢不喜欢踢足球？" },
+  { emoji:"🌡️", label:"热", py:"rè", en:"Ask: Is it hot today?", q:"今天热不热？" },
+  { emoji:"📚", label:"中文", py:"zhōng wén", en:"Ask: Do you study Chinese?", q:"你学不学中文？" }
+];
+
+// ========== STATE ==========
+let score = 0, level = 1, qIndex = 0, currentItem = null, spinning = false, currentRotation = 0;
+let currentUtterance = null;
+const TOTAL_LEVELS = 5, QUESTIONS_PER_LEVEL = 5;
+
+// ========== WHEEL ==========
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+const cx = 250, cy = 250, r = 240;
+const segAngle = (2 * Math.PI) / items.length;
+
+function drawWheel() {
+  ctx.clearRect(0, 0, 500, 500);
+  for (let i = 0; i < items.length; i++) {
+    const startA = i * segAngle + currentRotation;
+    const endA = startA + segAngle;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startA, endA);
+    ctx.closePath();
+    ctx.fillStyle = i % 2 === 0 ? '#eef2ff' : '#f5f3ff';
+    ctx.fill();
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // label: use icon if defined, else emoji
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(startA + segAngle / 2);
+    ctx.textAlign = 'right';
+    const label = items[i].icon || items[i].emoji;
+    if (items[i].icon) {
+      ctx.font = 'bold 30px "Microsoft YaHei", sans-serif';
+    } else {
+      ctx.font = '32px serif';
+    }
+    ctx.fillStyle = '#333';
+    ctx.fillText(label, r - 25, 10);
+    ctx.restore();
+  }
+}
+drawWheel();
+
+function spinWheel() {
+  if (spinning) return;
+  spinning = true;
+  document.getElementById('spinBtn').style.display = 'none';
+  document.querySelector('.wheel-center').style.pointerEvents = 'none';
+
+  const randSeg = Math.floor(Math.random() * items.length);
+
+  const randSegCenter = randSeg * segAngle + segAngle / 2;
+  const currentAngle = ((currentRotation % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+  let targetRel = -Math.PI / 2 - (currentAngle + randSegCenter);
+  targetRel = ((targetRel % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+  const fullTurns = 6 * 2 * Math.PI;
+  const totalRotation = fullTurns + targetRel;
+
+  const canvasEl = document.getElementById('wheelCanvas');
+  canvasEl.style.transform = `rotate(${currentRotation + totalRotation}rad)`;
+  currentRotation += totalRotation;
+
+  setTimeout(() => {
+    spinning = false;
+    currentItem = items[randSeg];
+    document.querySelector('.wheel-center').style.pointerEvents = 'auto';
+    showQuestion();
+  }, 4000);
+}
+
+// ========== GAME FLOW ==========
+function startGame() {
+  score = 0; level = 1; qIndex = 0;
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  document.getElementById('header').style.display = 'flex';
+  updateHeader();
+  showWheel();
+}
+
+function showWheel() {
+  document.getElementById('wheelScreen').style.display = 'block';
+  document.getElementById('qArea').style.display = 'none';
+  document.getElementById('spinBtn').style.display = 'none';
+  document.querySelector('.wheel-center').style.pointerEvents = 'auto';
+  drawWheel();
+}
+
+function showQuestion() {
+  document.getElementById('wheelScreen').style.display = 'none';
+  document.getElementById('qArea').style.display = 'block';
+  document.getElementById('qEmoji').textContent = currentItem.emoji;
+  document.getElementById('qLabel').textContent = currentItem.label + ' (' + currentItem.py + ')';
+  document.getElementById('englishHint').textContent = currentItem.en;
+  updateHeader();
+}
+
+function showAnswer() {
+  if (!currentItem) return;
+  const popup = document.getElementById('answerPopup');
+  const content = document.getElementById('answerContent');
+  content.innerHTML = `<div class="ruby-line">${buildRuby(currentItem.q)}</div>`;
+  popup.classList.add('show');
+}
+
+function buildRuby(text) {
+  const map = {
+    '这':'zhè','个':'gè','苹':'píng','果':'guǒ','大':'dà','不':'bù','你':'nǐ','吃':'chī','米':'mǐ','饭':'fàn',
+    '是':'shì','中':'zhōng','国':'guó','人':'rén','学':'xué','生':'shēng','手':'shǒu','机':'jī','贵':'guì',
+    '去':'qù','校':'xiào','喝':'hē','咖':'kā','啡':'fēi','书':'shū','包':'bāo','重':'zhòng','衣':'yī',
+    '服':'fú','好':'hǎo','看':'kàn','房':'fáng','子':'zi','朋':'péng','友':'yǒu','有':'yǒu','没':'méi',
+    '辣':'là','椒':'jiāo','香':'xiāng','蕉':'jiāo','长':'cháng','喜':'xǐ','欢':'huan','踢':'tī','足':'zú',
+    '球':'qiú','今':'jīn','天':'tiān','热':'rè','文':'wén'
+  };
+  let html = '', i = 0;
+  while (i < text.length) {
+    let matched = false;
+    if (i + 1 < text.length) {
+      const two = text.substr(i, 2);
+      if (map[two]) { html += `<ruby>${two}<rt>${map[two]}</rt></ruby>`; i += 2; matched = true; }
+    }
+    if (!matched) {
+      const one = text[i];
+      html += map[one] ? `<ruby>${one}<rt>${map[one]}</rt></ruby>` : one;
+      i++;
+    }
+  }
+  return html;
+}
+
+// ========== AUDIO ==========
+function playAudio() {
+  if (!currentItem) return;
+  // Stop any playing speech
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(currentItem.q);
+    u.lang = 'zh-CN';
+    u.rate = 0.7;   // slower for learners
+    u.pitch = 1;
+    currentUtterance = u;
+    window.speechSynthesis.speak(u);
+  } else {
+    alert('Sorry, your browser does not support audio playback.');
+  }
+}
+
+function answerYes() { score += 20; closeAnswer(); nextQ(); }
+function answerNo() { closeAnswer(); nextQ(); }
+function closeAnswer() {
+  document.getElementById('answerPopup').classList.remove('show');
+  // stop audio when closing
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
+
+function nextQ() {
+  qIndex++;
+  updateHeader();
+  if (qIndex >= QUESTIONS_PER_LEVEL) showLevelComplete();
+  else showWheel();
+}
+
+function updateHeader() {
+  document.getElementById('scoreDisplay').textContent = '⭐ ' + score;
+  document.getElementById('levelDisplay').textContent = '🏆 Level ' + level;
+  document.getElementById('qnumDisplay').textContent = '🎯 ' + (qIndex + 1) + '/' + QUESTIONS_PER_LEVEL;
+}
+
+function showLevelComplete() {
+  document.getElementById('qArea').style.display = 'none';
+  document.getElementById('wheelScreen').style.display = 'none';
+  document.getElementById('levelComplete').style.display = 'block';
+  document.getElementById('levelStars').textContent = level >= 5 ? '🏆🏆🏆🏆🏆' : '⭐⭐⭐⭐☆';
+  document.getElementById('levelCompleteText').textContent = `Level ${level} done! Score: ${score}`;
+}
+
+function nextLevel() {
+  level++;
+  qIndex = 0;
+  document.getElementById('levelComplete').style.display = 'none';
+  if (level > TOTAL_LEVELS) showEnd();
+  else showWheel();
+}
+
+function showEnd() {
+  document.getElementById('header').style.display = 'none';
+  document.getElementById('levelComplete').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'block';
+  document.getElementById('finalScore').textContent = score;
+}
+
+function backToHome() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.getElementById('header').style.display = 'none';
+  document.getElementById('wheelScreen').style.display = 'none';
+  document.getElementById('qArea').style.display = 'none';
+  document.getElementById('levelComplete').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'none';
+  document.getElementById('startScreen').style.display = 'block';
+  score = 0; level = 1; qIndex = 0;
+}
+
+function askReset() { document.getElementById('confirmModal').classList.add('show'); }
+function cancelReset() { document.getElementById('confirmModal').classList.remove('show'); }
+function confirmReset() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.getElementById('confirmModal').classList.remove('show');
+  backToHome();
+}
+
+document.getElementById('answerPopup').addEventListener('click', function(e) {
+  if (e.target === this) closeAnswer();
+});
+</script>
+</body>
+</html>
